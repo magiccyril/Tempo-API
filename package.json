@@ -3,12 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "supertest": "*"
   },
   "dependencies": {
     "express": "3.0.1",
-    "ejs": "*",
-    "mocha": "*",
-    "should": "*"
+    "ejs": "*"
   }
 }
