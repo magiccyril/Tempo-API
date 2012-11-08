@@ -5,7 +5,7 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , forecast = require('./routes/forecast')
+  , tempo = require('./routes/tempo')
   , http = require('http')
   , path = require('path');
 
@@ -27,8 +27,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+// Front
 app.get('/', routes.index);
-app.post('/forecast', forecast.create);
+
+// Tempo
+app.post('/tempo', tempo.create);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
