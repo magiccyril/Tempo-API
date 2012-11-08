@@ -1,7 +1,7 @@
 var path = require('path'),
     config = require('../config'),
     mongoose = require('mongoose'),
-    Tempo = require('../model/tempo');
+    Tempo = require('../model').Tempo;
 
 /*
  * POST tempo creation.

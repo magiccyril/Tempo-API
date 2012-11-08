@@ -4,7 +4,7 @@ var request  = require('supertest')
   , app      = require('../../app')
   , fixtures = require('../fixtures')
   , mongoose = require('mongoose')
-  , Tempo    = require('../../model/tempo');
+  , Tempo    = require('../../model').Tempo;
 
 describe('POST /tempo', function() {
     it('respond 412 if no object provided', function(done) {
