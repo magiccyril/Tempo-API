@@ -1,10 +1,10 @@
 var request  = require('supertest')
   , express  = require('express')
   , assert   = require('assert')
-  , app      = require('../app')
-  , fixtures = require('./fixtures')
+  , app      = require('../../app')
+  , fixtures = require('../fixtures')
   , mongoose = require('mongoose')
-  , Tempo    = require('../model/tempo');
+  , Tempo    = require('../../model/tempo');
 
 describe('POST /tempo', function() {
     it('respond 412 if no object provided', function(done) {
