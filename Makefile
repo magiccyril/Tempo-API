@@ -1,15 +1,8 @@
-MOCHA_OPTS=
-REPORTER = dot
-
 test:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--reporter $(REPORTER) \
-		$(MOCHA_OPTS)
+	@NODE_ENV=test ./node_modules/.bin/mocha
 
 watch-test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--reporter $(REPORTER) \
-		--watch \
-		$(MOCHA_OPTS)
+		--watch
 
 .PHONY: test watch-test

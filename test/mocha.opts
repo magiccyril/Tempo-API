@@ -1,4 +1,5 @@
 --require should
 --require assert
---slow 20
+--reporter spec
 --recursive
+--slow 20
