@@ -1,4 +1,4 @@
-var path = require("path"),
+var path = require('path'),
     config = require('../config'),
     mongoose = require('mongoose'),
     Tempo = require('../model/tempo');
