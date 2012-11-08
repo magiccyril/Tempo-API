@@ -3,7 +3,6 @@ var request  = require('supertest')
   , assert   = require('assert')
   , should   = require('should')
   , app      = require('../../app')
-  , fixtures = require('../fixtures')
   , mongoose = require('mongoose')
   , Tempo    = require('../../model').Tempo;
 
@@ -20,11 +19,11 @@ describe('Tempo API', function() {
     });
 
     it('should save object to database and respond 200', function(done) {
-      var object = fixtures.tempo;
+      var tempo = new Tempo();
 
       request(app)
         .post('/tempo')
-        .send({ day: object.day, color: object.color })
+        .send({ day: tempo.day, color: tempo.color })
         .end(function(err, res) {
           if (err) {
             return done(err);
@@ -32,12 +31,12 @@ describe('Tempo API', function() {
 
           res.should.have.status(200);
 
-          Tempo.findOne({ day: object.day }, function (err, tempo) {
+          Tempo.findOne({ day: object.day }, function (err, data) {
             if (err) {
               return done(err);
             }
 
-            should.exist(tempo);
+            should.exist(data);
 
             done();
           });
