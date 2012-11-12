@@ -89,6 +89,38 @@ describe('Tempo API', function() {
 
         });
     });
+
+    it('should have an alternative URL /tempo/{year}-{month}-{day} to save an object', function(done) {
+      request(app)
+        .post('/tempo/'+ postData.year +'-'+ postData.month + '-'+ postData.day)
+        .send({color: postData.color})
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.should.have.status(200);
+
+          Tempo.findOneByDate(postData, function(err, tempo) {
+            if (err) {
+              return done(err);
+            }
+
+            tempo.should.be.ok;
+            tempo.date.year.should.equal(postData.year);
+            tempo.date.month.should.equal(postData.month);
+            tempo.date.day.should.equal(postData.day);
+            tempo.color.should.equal(postData.color);
+
+            // remove test data.
+            tempo.remove();
+
+            done();
+          });
+
+        });
+    });
+  });
   });
 
   describe('GET /tempo', function() {

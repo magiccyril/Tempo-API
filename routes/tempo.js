@@ -3,15 +3,32 @@ var path = require('path')
   , mongoose = require('mongoose')
   , Tempo = require('../model').Tempo;
 
+/**
+ * Helper function
+ */
+function getStringDate(year, month, day) {
+    var date = '';
+    if (year) {
+        date += year;
+    }
+    if (month) {
+        date += '-' + month;
+    }
+    if (day) {
+        date += '-' + day;
+    }
+
+    return date;
+}
+
 /*
  * POST tempo creation.
  */
-
 exports.create = function(req, res) {
-    var year  = req.body.year;
-    var month = req.body.month;
-    var day   = req.body.day;
-    var color = req.body.color;
+    var year  = req.params.year  ? req.params.year  : req.body.year;
+    var month = req.params.month ? req.params.month : req.body.month;
+    var day   = req.params.day   ? req.params.day   : req.body.day;
+    var color = req.params.color ? req.params.color : req.body.color;
 
     if (!year || !month || !day || !color) {
         return res.send(412);
@@ -37,6 +54,11 @@ exports.create = function(req, res) {
  * GET list all tempo.
  */
 
+};
+
+/*
+ * GET list all tempo.
+ */
 exports.listAll = function(req, res) {
     Tempo.find({}, function(err, data) {
         if (err) {
@@ -48,30 +70,14 @@ exports.listAll = function(req, res) {
 };
 
 /*
- * GET list specific dates tempo.
+ * POST list specific dates tempo.
  */
-
-function getListDate(year, month, day) {
-    var date = '';
-    if (year) {
-        date += year;
-    }
-    if (month) {
-        date += '-' + month;
-    }
-    if (day) {
-        date += '-' + day;
-    }
-
-    return date;
-}
-
 exports.listDates = function(req, res) {
     var year  = req.params.year;
     var month = req.params.month;
     var day   = req.params.day;
 
-    var date  = getListDate(year, month, day);
+    var date  = getStringDate(year, month, day);
 
     Tempo.findByDate(date, function(err, data) {
         if (err) {
