@@ -51,8 +51,37 @@ exports.create = function(req, res) {
 };
 
 /*
- * GET list all tempo.
+ * DELETE tempo.
  */
+exports.del = function(req, res) {
+    var year  = req.params.year;
+    var month = req.params.month;
+    var day   = req.params.day;
+
+    if (!year || !month || !day) {
+        return res.send(412);
+    }
+
+    var date = getStringDate(year, month, day);
+
+    Tempo.findOneByDate(date, function(err, tempo) {
+        if (err) {
+            return res.send(412, { error: err });
+        }
+
+        if (!tempo) {
+            return res.send(412);
+        }
+
+        tempo.remove(function(err) {
+            if (err) {
+                return res.send(412, { error: err });
+            }
+
+            return res.send(200);
+        });
+
+    });
 
 };
 

@@ -121,6 +121,61 @@ describe('Tempo API', function() {
         });
     });
   });
+
+  describe('DELETE /tempo/{year}-{month}-{day}', function() {
+    var testData = null;
+    var testTempo = null;
+
+    beforeEach(function(done) {
+      testData = {
+        date: {
+          year: 1985,
+          month: 1,
+          day: 18
+        },
+        color: 'blue'
+      };
+      testTempo = new Tempo(testData);
+      testTempo.save(function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        done();
+      });
+    });
+
+    afterEach(function(done) {
+      testTempo.remove(function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        done();
+      });
+    });
+
+    it('should delete an object', function(done) {
+      request(app)
+        .del('/tempo/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day)
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.should.have.status(200);
+
+          Tempo.findOneByDate(testData.date, function(err, tempo) {
+            if (err) {
+              return done(err);
+            }
+
+            should.not.exist(tempo);
+
+            done();
+          });
+        });
+    });
   });
 
   describe('GET /tempo', function() {

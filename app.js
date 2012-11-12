@@ -45,6 +45,9 @@ app.param('day', Number);
 
 app.post('/tempo', tempo.create);
 app.post('/tempo/:year-:month-:day', tempo.create);
+
+app.del('/tempo/:year-:month-:day', tempo.del);
+
 app.get('/tempo', tempo.listAll);
 app.get('/tempo/:year', tempo.listDates);
 app.get('/tempo/:year-:month', tempo.listDates);
