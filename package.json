@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "express": "3.0.1",
+    "express-params": "*",
     "ejs": "*",
     "mongoose": "*",
     "nconf": "*"

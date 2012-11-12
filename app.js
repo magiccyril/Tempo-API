@@ -4,6 +4,7 @@
  */
 
 var express = require('express')
+  , params = require('express-params')
   , routes = require('./routes')
   , tempo = require('./routes/tempo')
   , http = require('http')
@@ -11,6 +12,7 @@ var express = require('express')
   , config = require('./config');
 
 var app = express();
+params.extend(app);
 
 // connect to Mongo when the app initializes
 if (0 === mongoose.connection.readyState) {
@@ -37,7 +39,15 @@ app.configure('development', function(){
 app.get('/', routes.index);
 
 // Tempo
+app.param('year', Number);
+app.param('month', Number);
+app.param('day', Number);
+
 app.post('/tempo', tempo.create);
+app.get('/tempo', tempo.listAll);
+app.get('/tempo/:year', tempo.listDates);
+app.get('/tempo/:year-:month', tempo.listDates);
+app.get('/tempo/:year-:month-:day', tempo.listDates);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
