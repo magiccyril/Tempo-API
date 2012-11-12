@@ -38,23 +38,23 @@ describe('Tempo API', function() {
       };
     });
 
-    it('should respond 412 if no data provided', function(done) {
+    it('should respond 501 if no data provided', function(done) {
       request(app)
         .post('/tempo')
         .end(function(err, res){
-          res.should.have.status(412);
+          res.should.have.status(501);
           done();
         });
     });
 
-    it('should respond 412 if invalid data provided', function(done) {
+    it('should respond 501 if invalid data provided', function(done) {
       postData.color = 'pink';
 
       request(app)
         .post('/tempo')
         .send(postData)
         .end(function(err, res){
-          res.should.have.status(412);
+          res.should.have.status(501);
           done();
         });
     });

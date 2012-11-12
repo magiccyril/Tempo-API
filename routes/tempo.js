@@ -31,7 +31,7 @@ exports.create = function(req, res) {
     var color = req.params.color ? req.params.color : req.body.color;
 
     if (!year || !month || !day || !color) {
-        return res.send(412);
+        return res.send(501);
     }
 
     var tempo = new Tempo({
@@ -43,7 +43,7 @@ exports.create = function(req, res) {
 
     tempo.save(function(err) {
         if (err) {
-            return res.send(412, { error: err });
+            return res.send(501, { error: err });
         }
 
         res.send(200);
@@ -59,23 +59,23 @@ exports.del = function(req, res) {
     var day   = req.params.day;
 
     if (!year || !month || !day) {
-        return res.send(412);
+        return res.send(501);
     }
 
     var date = getStringDate(year, month, day);
 
     Tempo.findOneByDate(date, function(err, tempo) {
         if (err) {
-            return res.send(412, { error: err });
+            return res.send(501, { error: err });
         }
 
         if (!tempo) {
-            return res.send(412);
+            return res.send(501);
         }
 
         tempo.remove(function(err) {
             if (err) {
-                return res.send(412, { error: err });
+                return res.send(501, { error: err });
             }
 
             return res.send(200);
@@ -91,7 +91,7 @@ exports.del = function(req, res) {
 exports.listAll = function(req, res) {
     Tempo.find({}, function(err, data) {
         if (err) {
-            return res.send(412, { error: err });
+            return res.send(501, { error: err });
         }
 
         res.json(data);
@@ -110,7 +110,7 @@ exports.listDates = function(req, res) {
 
     Tempo.findByDate(date, function(err, data) {
         if (err) {
-            return res.send(412, { error: err });
+            return res.send(501, { error: err });
         }
 
         res.json(data);
