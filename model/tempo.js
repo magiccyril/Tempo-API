@@ -169,7 +169,7 @@ schema.static('findOneByDate', function (date, callback) {
     throw new Error('Invalid parameters');
   }
 
-  var condition = getFindByDateCondition(date);
+  var condition = getDateCondition(date);
   return this.findOne(condition, callback);
 });
 
@@ -183,10 +183,10 @@ schema.static('findByDate', function () {
 
   switch (arguments.length) {
     case 2:
-      condition = getFindByDateCondition(arguments[0]);
+      condition = getDateCondition(arguments[0]);
       break;
     case 3:
-      condition = getFindByDateRangeCondition(arguments[0], arguments[1]);
+      condition = getDateRangeCondition(arguments[0], arguments[1]);
       break;
     default:
       throw new Error('Invalid parameters');
@@ -224,7 +224,7 @@ schema.static('parseDate', function (data) {
 });
 
 
-function getFindByDateCondition(date) {
+function getDateCondition(date) {
   var condition = {};
   date = Tempo.parseDate(date);
 
@@ -240,7 +240,7 @@ function getFindByDateCondition(date) {
 
   return condition;
 }
-function getFindByDateRangeCondition(dateStart, dateEnd) {
+function getDateRangeCondition(dateStart, dateEnd) {
   var condition = {};
   dateStart = Tempo.parseDate(dateStart);
   dateEnd = Tempo.parseDate(dateEnd);
