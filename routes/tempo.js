@@ -99,14 +99,10 @@ exports.listAll = function(req, res) {
 };
 
 /*
- * POST list specific dates tempo.
+ * GET list specific dates tempo.
  */
 exports.listDates = function(req, res) {
-    var year  = req.params.year;
-    var month = req.params.month;
-    var day   = req.params.day;
-
-    var date  = getStringDate(year, month, day);
+    var date  = getStringDate(req.params.year, req.params.month, req.params.day);
 
     Tempo.findByDate(date, function(err, data) {
         if (err) {
@@ -116,3 +112,41 @@ exports.listDates = function(req, res) {
         res.json(data);
     });
 };
+
+/*
+ * GET count by color between two dates.
+ */
+exports.count = function(req, res) {
+    var from = req.query.from;
+    var to = req.query.to;
+
+    if (!from) {
+        return res.send(501, { error: new Error('Invalid arguments') });
+    }
+
+    if (!to) {
+        to = new Date();
+    }
+
+    Tempo.findByDateRange(from, to, function(err, data) {
+        if (err) {
+            return res.send(501, { error: err });
+        }
+
+        var colors = {
+            'blue': 0,
+            'white': 0,
+            'red': 0
+        };
+
+        for (var i in data) {
+            var tempo = data[i];
+
+            if (tempo.color) {
+                colors[tempo.color]++;
+            }
+        }
+
+        res.json(colors);
+    });
+}

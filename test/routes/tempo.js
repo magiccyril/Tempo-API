@@ -4,7 +4,8 @@ var request  = require('supertest')
   , should   = require('should')
   , app      = require('../../app')
   , mongoose = require('mongoose')
-  , Tempo    = require('../../model').Tempo;
+  , Tempo    = require('../../model').Tempo
+  , async    = require('async');
 
 /**
  * Utilities
@@ -233,7 +234,6 @@ describe('Tempo API', function() {
             res.should.have.status(200);
             res.should.be.json;
 
-
             res.body.length.should.equal(366);
 
             done();
@@ -305,6 +305,72 @@ describe('Tempo API', function() {
             done();
           });
       });
+    });
+
+  });
+
+  describe('GET /tempo/count', function() {
+    var year = 1985;
+
+    beforeEach(function(done) {
+      var date = new Date();
+      date.setFullYear(year);
+      date.setMonth(9 - 1);
+      date.setDate(1);
+
+      for (var i = 0; i < 365; i++) {
+        var tempo = new Tempo();
+        tempo.date.year  = date.getFullYear();
+        tempo.date.month = date.getMonth() + 1;
+        tempo.date.day   = date.getDate();
+        tempo.color      = getRandomColor();
+        tempo.save();
+
+        date.setDate(date.getDate() + 1);
+      }
+
+      done();
+    });
+
+    afterEach(function(done) {
+      var deleteYear = function (year) {
+        return function (callback) {
+          Tempo.where('date.year', year).remove(function(err) {
+            if (err) {
+              callback(err);
+            }
+
+            callback(null);
+          });
+        }
+      }
+
+      async.parallel([deleteYear(year), deleteYear(year + 1)], function(err) {
+        if (err) {
+          return done(err);
+        };
+
+        done();
+      });
+    });
+
+    it('should respond a JSON with the count of colors between two dates', function(done) {
+      request(app)
+        .get('/tempo/count?from=1985-09-01&to=1986-01-18')
+        .end(function(err, res){
+          res.should.have.status(200);
+          res.should.be.json;
+
+          should.exist(res.body.blue);
+          should.exist(res.body.white);
+          should.exist(res.body.red);
+
+          var sum = res.body.blue + res.body.white + res.body.red;
+          // 140 = from year - 1 september 1 to january 18
+          sum.should.be.equal(140);
+
+          done();
+        });
     });
 
   });

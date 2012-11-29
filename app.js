@@ -35,14 +35,15 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-// Front
-app.get('/', routes.index);
-
-// Tempo
+// Parameters
 app.param('year', Number);
 app.param('month', Number);
 app.param('day', Number);
 
+// Front
+app.get('/', routes.index);
+
+// Tempo
 app.post('/tempo', tempo.create);
 app.post('/tempo/:year-:month-:day', tempo.create);
 
@@ -52,6 +53,9 @@ app.get('/tempo', tempo.listAll);
 app.get('/tempo/:year', tempo.listDates);
 app.get('/tempo/:year-:month', tempo.listDates);
 app.get('/tempo/:year-:month-:day', tempo.listDates);
+
+app.get('/tempo/count', tempo.count);
+app.get('/tempo/count/:year-:month-:day', tempo.count);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
