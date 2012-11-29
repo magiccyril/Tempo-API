@@ -12,6 +12,7 @@
     "supertest": "*"
   },
   "dependencies": {
+    "async": "*",
     "express": "3.0.1",
     "express-params": "*",
     "ejs": "*",
