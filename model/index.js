@@ -1,7 +1,5 @@
-var Counter = require('./counter')
-  , Tempo = require('./tempo');
+var Tempo = require('./tempo');
 
 module.exports = {
-  Counter: Counter,
   Tempo: Tempo
 };
