@@ -25,15 +25,27 @@ Array.prototype.pad = function (padSize, padValue) {
   return array;
 };
 
+function datePad(date) {
+  if (!date.year) {
+    var jsDate = new Date();
+    date.year = jsDate.getFullYear();
+  }
+
+  if (!date.month) {
+    date.month = 1;
+  }
+
+  if (!date.day) {
+    date.day = 1;
+  }
+
+  return date;
+}
+
 /**
  * Date conversion tools
  */
-function dateStringToArray (string) {
-  var array = string.split('-');
-  return array.pad(3, false);
-}
-
-function dateToArray (date) {
+function jsDateToArray (date) {
   var array = Array();
 
   array[0] = date.getFullYear();
@@ -41,6 +53,27 @@ function dateToArray (date) {
   array[2] = date.getDate();
 
   return array;
+}
+
+function dateToJSDate (date) {
+  date = datePad(date);
+
+  var jsDate = new Date();
+  jsDate.setDate(date.day);
+  jsDate.setMonth(date.month - 1);
+  jsDate.setFullYear(date.year);
+
+  return jsDate;
+}
+
+function jsDateToDate (jsDate) {
+  var date = {};
+
+  date.year = jsDate.getFullYear();
+  date.month = jsDate.getMonth() + 1;
+  date.day = jsDate.getDate();
+
+  return date;
 }
 
 function dateObjectValid (obj) {
@@ -169,30 +202,83 @@ schema.static('findOneByDate', function (date, callback) {
     throw new Error('Invalid parameters');
   }
 
-  var condition = getDateCondition(date);
-  return this.findOne(condition, callback);
+  date = Tempo.parseDate(date);
+
+  return this.findOne()
+    .where('date.year', date.year)
+    .where('date.month', date.month)
+    .where('date.day', date.day)
+    .exec(callback);
 });
 
-schema.static('findByDate', function () {
-  if (2 > arguments.length && arguments.length > 3) {
+schema.static('findByDate', function (date, callback) {
+  if (!date || !callback) {
     throw new Error('Invalid parameters');
   }
 
-  var callback = arguments[arguments.length - 1];
-  var condition = null;
+  date = Tempo.parseDate(date);
 
-  switch (arguments.length) {
-    case 2:
-      condition = getDateCondition(arguments[0]);
-      break;
-    case 3:
-      condition = getDateRangeCondition(arguments[0], arguments[1]);
-      break;
-    default:
-      throw new Error('Invalid parameters');
+  var query = this.find();
+  if (date.year) {
+    query.where('date.year', date.year);
+  }
+  if (date.month) {
+    query.where('date.month', date.month);
+  }
+  if (date.day) {
+    query.where('date.day', date.day);
   }
 
-  return this.find(condition, callback);
+  return query.exec(callback);
+});
+
+function getDaysBetweenDates(startDate, endDate) {
+  var jsStartDate = dateToJSDate(startDate);
+  var jsEndDate = dateToJSDate(endDate);
+
+  var diff = jsEndDate.getTime() - jsStartDate.getTime();
+
+  var oneDay = 1000 * 60 * 60 * 24;
+
+  return Math.ceil(diff / oneDay);
+}
+
+function getDatesBetweenDates(startDate, endDate) {
+  var dates = Array();
+  var diff = getDaysBetweenDates(startDate, endDate);
+
+  var jsDate = dateToJSDate(datePad(startDate));
+
+  for (var i = 0; i < diff; i++) {
+    dates.push(jsDateToDate(jsDate));
+    jsDate.setDate(jsDate.getDate() + 1);
+  }
+
+  return dates;
+}
+
+schema.static('findByDateRange', function (startDate, endDate, callback) {
+  if (!startDate || !endDate || !callback) {
+    throw new Error('Invalid parameters');
+  }
+
+  startDate = Tempo.parseDate(startDate);
+  endDate = Tempo.parseDate(endDate);
+
+  var condition = Array();
+  var dates = getDatesBetweenDates(startDate, endDate);
+  for (var i in dates) {
+    var date = dates[i];
+    if (date.year && date.month && date.day) {
+      condition.push({
+        'date.year': date.year,
+        'date.month': date.month,
+        'date.day': date.day
+      });
+    }
+  }
+
+  return this.find({ $or: condition }).exec(callback);
 });
 
 schema.static('parseDate', function (data) {
@@ -208,7 +294,7 @@ schema.static('parseDate', function (data) {
     dateArray = data.split('-');
   }
   else if (data instanceof Date) {
-    dateArray = dateToArray(data);
+    dateArray = jsDateToArray(data);
   }
   else {
     throw Error('invalid arguments');
@@ -222,50 +308,6 @@ schema.static('parseDate', function (data) {
 
   return date;
 });
-
-
-function getDateCondition(date) {
-  var condition = {};
-  date = Tempo.parseDate(date);
-
-  if (date.year) {
-    condition['date.year'] = date.year;
-  }
-  if (date.month) {
-    condition['date.month'] = date.month;
-  }
-  if (date.day) {
-    condition['date.day'] = date.day;
-  }
-
-  return condition;
-}
-function getDateRangeCondition(dateStart, dateEnd) {
-  var condition = {};
-  dateStart = Tempo.parseDate(dateStart);
-  dateEnd = Tempo.parseDate(dateEnd);
-
-  if (dateStart.year && dateEnd.year) {
-    condition['date.year'] = {
-      '$gte': dateStart.year,
-      '$lte': dateEnd.year
-    };
-  }
-  if (dateStart.month && dateEnd.month) {
-    condition['date.month'] = {
-      '$gte': dateStart.month,
-      '$lte': dateEnd.month
-    };
-  }
-  if (dateStart.day && dateEnd.day) {
-    condition['date.day'] = {
-      '$gte': dateStart.day,
-      '$lte': dateEnd.day
-    };
-  }
-
-  return condition;
-}
 
 
 /**

@@ -1,7 +1,23 @@
 var mongoose = require("mongoose")
   , config   = require('../../config')
   , Tempo    = require('../../model').Tempo
-  , should   = require('should');
+  , should   = require('should')
+  , async    = require('async');
+
+/**
+ * Utilities
+ */
+function getRandomColor() {
+  var i = Math.floor(Math.random() * 3);
+  switch (i) {
+    case 0:
+      return 'blue';
+    case 1:
+      return 'white';
+    case 2:
+      return 'red';
+  }
+}
 
 describe('Tempo Schema', function() {
 
@@ -49,29 +65,53 @@ describe('Tempo Schema', function() {
   });
 
   describe('Queries', function() {
-    var testTempo = null;
-    var testDate = null;
+    var year      = 1985;
+    var testDate  = {
+      year: year,
+      month: 1,
+      day: 18
+    };
 
-    beforeEach(function(done) {
-      testDate = {
-        year: 1985,
-        month: 1,
-        day: 18
-      };
+    beforeEach(function (done) {
+      var date = new Date();
+      date.setFullYear(year - 1);
+      date.setMonth(9 - 1);
+      date.setDate(1);
 
-      testTempo = new Tempo({date: testDate});
+      for (var i = 0; i < 365; i++) {
+        var tempo = new Tempo();
+        tempo.date.year  = date.getFullYear();
+        tempo.date.month = date.getMonth() + 1;
+        tempo.date.day   = date.getDate();
+        tempo.color      = getRandomColor();
+        tempo.save();
 
-      testTempo.save(function(err) {
+        date.setDate(date.getDate() + 1);
+      }
+
+      done();
+    });
+
+    afterEach(function (done) {
+      var deleteYear = function (year) {
+        return function (callback) {
+          Tempo.where('date.year', year).remove(function(err) {
+            if (err) {
+              callback(err);
+            }
+
+            callback(null);
+          });
+        }
+      }
+
+      async.parallel([deleteYear(year - 1), deleteYear(year)], function(err) {
         if (err) {
           return done(err);
-        }
+        };
 
         done();
       });
-    });
-
-    afterEach(function() {
-      testTempo.remove();
     });
 
     it('should have a function to retreive one object by date', function(done) {
@@ -117,6 +157,7 @@ describe('Tempo Schema', function() {
         }
 
         data.should.be.ok.and.not.be.empty;
+        data.length.should.be.within(2, 31);
         data.forEach(function(tempo) {
           tempo.date.year.should.equal(testDate.year);
           tempo.date.month.should.equal(testDate.month);
@@ -134,6 +175,8 @@ describe('Tempo Schema', function() {
         }
 
         data.should.be.ok.and.not.be.empty;
+        // 243 = from january 1 to august 31
+        data.length.should.be.equal(243);
         data.forEach(function(tempo) {
           tempo.date.year.should.equal(testDate.year);
         });
@@ -143,24 +186,26 @@ describe('Tempo Schema', function() {
     });
 
     it('should have a function to retreive objects by range', function(done) {
-      var startDate = testDate;
-      startDate.day = testDate.day - 1;
-      var endDate = testDate;
-      endDate.day = testDate.day + 1;
+      var startDate = {
+        year: year - 1,
+        month: 9,
+        day: 1
+      };
+      var endDate = {
+        year: year,
+        month: 1,
+        day: 18
+      };
 
-      Tempo.findByDate.should.be.a('function');
-
-      Tempo.findByDate(startDate, endDate, function(err, data) {
+      Tempo.findByDateRange.should.be.a('function');
+      Tempo.findByDateRange(startDate, endDate, function(err, data) {
         if (err) {
           return done(err);
         }
 
         data.should.be.ok.and.not.be.empty;
-        data.forEach(function(tempo) {
-          tempo.date.year.should.equal(testDate.year);
-          tempo.date.month.should.equal(testDate.month);
-          tempo.date.day.should.be.within(testDate.day - 1, testDate.day + 1);
-        });
+        // 140 = from year - 1 september 1 to january 18
+        data.length.should.be.equal(140);
 
         done();
       });
