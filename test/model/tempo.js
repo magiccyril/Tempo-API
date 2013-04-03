@@ -4,20 +4,6 @@ var mongoose = require("mongoose")
   , should   = require('should')
   , async    = require('async');
 
-/**
- * Utilities
- */
-function getRandomColor() {
-  var i = Math.floor(Math.random() * 3);
-  switch (i) {
-    case 0:
-      return 'blue';
-    case 1:
-      return 'white';
-    case 2:
-      return 'red';
-  }
-}
 
 describe('Tempo Model', function() {
 
