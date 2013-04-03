@@ -1,6 +1,6 @@
-var mongoose = require('mongoose'),
-    extend   = require('mongoose-schema-extend'),
-    utils    = require('../lib/utils.js');
+var mongoose = require('mongoose')
+  , extend   = require('mongoose-schema-extend')
+  , utils    = require('../lib/utils.js');
 
 /**
  * Schema

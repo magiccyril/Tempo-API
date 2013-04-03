@@ -1,6 +1,6 @@
-var mongoose = require('mongoose'),
-    extend   = require('mongoose-schema-extend')
-    ForecastSchema = require('./forecast').schema;
+var mongoose = require('mongoose')
+  , extend   = require('mongoose-schema-extend')
+  , ForecastSchema = require('./forecast').schema;
 var utils = require('../lib/utils');
 
 /**
@@ -15,9 +15,9 @@ var schema = ForecastSchema.extend({
   }
 });
 
-var Tempo = mongoose.model('tempo', schema);
+var model = mongoose.model('tempo', schema);
 
 module.exports = {
-  'model': Tempo,
+  'model': model,
   'schema': schema
 };
