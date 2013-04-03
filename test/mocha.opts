@@ -2,4 +2,4 @@
 --require assert
 --reporter spec
 --recursive
---slow 20
+--slow 500
