@@ -1,5 +1,7 @@
-var Tempo = require('./tempo');
+var Forecast = require('./forecast')
+    Tempo    = require('./tempo');
 
 module.exports = {
-  Tempo: Tempo
+  Forecast: Forecast.model,
+  Tempo: Tempo.model
 };

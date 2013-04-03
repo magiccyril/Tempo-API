@@ -17,6 +17,7 @@
     "express-params": "*",
     "ejs": "*",
     "mongoose": "*",
+    "mongoose-schema-extend": "*",
     "nconf": "*"
   }
 }
