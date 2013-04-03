@@ -12,13 +12,13 @@ var config = new nconf.Provider({
 });
 
 config.getConnectionString = function(suffix) {
-    var connectionString = 'mongodb://'+ config.get('database:host') +':'+ config.get('database:port') +'/'+ config.get('database:name');
+  var connectionString = 'mongodb://'+ config.get('database:host') +':'+ config.get('database:port') +'/'+ config.get('database:name');
 
-    if (suffix) {
-        connectionString += suffix;
-    }
+  if (suffix) {
+    connectionString += suffix;
+  }
 
-    return connectionString;
+  return connectionString;
 }
 
 module.exports = config;
