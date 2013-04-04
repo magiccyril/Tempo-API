@@ -1,7 +1,7 @@
-var mongoose = require('mongoose')
-  , extend   = require('mongoose-schema-extend')
-  , ForecastSchema = require('./forecast').schema;
-var utils = require('../lib/utils');
+var mongoose       = require('mongoose')
+  , extend         = require('mongoose-schema-extend')
+  , ForecastSchema = require('./forecast').schema
+  , utils          = require('../lib/utils');
 
 /**
  * Schema

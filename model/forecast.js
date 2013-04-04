@@ -34,7 +34,7 @@ var schema = new mongoose.Schema({
 });
 
 schema.pre('save', function (next) {
-  var date = new Date(this.date.year, this.date.month - 1, this.date.day);
+  var date  = new Date(this.date.year, this.date.month - 1, this.date.day);
   var valid = date.getFullYear() === this.date.year &&
               date.getMonth() + 1 === this.date.month &&
               date.getDate() === this.date.day;
@@ -52,11 +52,11 @@ schema.pre('save', function (next) {
  */
 schema.method({
   dateFormated: function () {
-    var year = utils.pad(this.date.year, 4);
+    var year  = utils.pad(this.date.year, 4);
     var month = utils.pad(this.date.month, 2);
-    var day = utils.pad(this.date.day, 2);
+    var day   = utils.pad(this.date.day, 2);
 
-    return ''+ year + '-' + month + '-' + day;
+    return '' + year + '-' + month + '-' + day;
   },
 
   setDate: function(data) {
@@ -118,7 +118,7 @@ schema.static('findByDateRange', function (startDate, endDate, callback) {
   endDate = Forecast.parseDate(endDate);
 
   var condition = Array();
-  var dates = utils.getDatesBetweenDates(startDate, endDate);
+  var dates     = utils.getDatesBetweenDates(startDate, endDate);
   for (var i in dates) {
     var date = dates[i];
     if (date.year && date.month && date.day) {
