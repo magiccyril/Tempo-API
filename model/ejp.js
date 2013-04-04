@@ -7,7 +7,7 @@ var mongoose       = require('mongoose')
  * Schema
  */
 var schema = ForecastSchema.extend({
-  ejp: {
+  zones: {
     north: {
       default: false,
       required: true,

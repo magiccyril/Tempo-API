@@ -33,7 +33,7 @@ describe('EJP API', function() {
         year: 1985,
         month: 1,
         day: 18,
-        ejp: {
+        zones: {
           north: getRandomBoolean(),
           paca: getRandomBoolean(),
           west: getRandomBoolean(),
@@ -52,7 +52,7 @@ describe('EJP API', function() {
     });
 
     it('should respond 501 if invalid data provided', function(done) {
-      postData.ejp = {
+      postData.zones = {
         north: 'ejp',
         paca: 'oui'
       };
@@ -86,10 +86,10 @@ describe('EJP API', function() {
             ejp.date.year.should.equal(postData.year);
             ejp.date.month.should.equal(postData.month);
             ejp.date.day.should.equal(postData.day);
-            ejp.ejp.north.should.equal(postData.ejp.north);
-            ejp.ejp.paca.should.equal(postData.ejp.paca);
-            ejp.ejp.west.should.equal(postData.ejp.west);
-            ejp.ejp.south.should.equal(postData.ejp.south);
+            ejp.zones.north.should.equal(postData.zones.north);
+            ejp.zones.paca.should.equal(postData.zones.paca);
+            ejp.zones.west.should.equal(postData.zones.west);
+            ejp.zones.south.should.equal(postData.zones.south);
 
             // remove test data.
             ejp.remove();
@@ -103,7 +103,7 @@ describe('EJP API', function() {
     it('should have an alternative URL /ejp/{year}-{month}-{day} to save an object', function(done) {
       request(app)
         .post('/ejp/'+ postData.year +'-'+ postData.month + '-'+ postData.day)
-        .send({ejp: postData.ejp})
+        .send({zones: postData.zones})
         .end(function(err, res) {
           if (err) {
             return done(err);
@@ -120,10 +120,10 @@ describe('EJP API', function() {
             ejp.date.year.should.equal(postData.year);
             ejp.date.month.should.equal(postData.month);
             ejp.date.day.should.equal(postData.day);
-            ejp.ejp.north.should.equal(postData.ejp.north);
-            ejp.ejp.paca.should.equal(postData.ejp.paca);
-            ejp.ejp.west.should.equal(postData.ejp.west);
-            ejp.ejp.south.should.equal(postData.ejp.south);
+            ejp.zones.north.should.equal(postData.zones.north);
+            ejp.zones.paca.should.equal(postData.zones.paca);
+            ejp.zones.west.should.equal(postData.zones.west);
+            ejp.zones.south.should.equal(postData.zones.south);
 
             // remove test data.
             ejp.remove();
@@ -146,7 +146,7 @@ describe('EJP API', function() {
           month: 1,
           day: 18
         },
-        ejp: {
+        zones: {
           north: getRandomBoolean(),
           paca: getRandomBoolean(),
           west: getRandomBoolean(),
@@ -212,7 +212,7 @@ describe('EJP API', function() {
         ejp.date.year  = date.getFullYear();
         ejp.date.month = date.getMonth() + 1;
         ejp.date.day   = date.getDate();
-        ejp.ejp        = {
+        ejp.zones      = {
           north: getRandomBoolean(),
           paca: getRandomBoolean(),
           west: getRandomBoolean(),
@@ -229,7 +229,7 @@ describe('EJP API', function() {
           month: 3,
           day: 18
         },
-        ejp: {
+        zones: {
           north: getRandomBoolean(),
           paca: getRandomBoolean(),
           west: getRandomBoolean(),
@@ -350,7 +350,7 @@ describe('EJP API', function() {
         ejp.date.year  = date.getFullYear();
         ejp.date.month = date.getMonth() + 1;
         ejp.date.day   = date.getDate();
-        ejp.ejp        = {
+        ejp.zones      = {
           north: getRandomBoolean(),
           paca: getRandomBoolean(),
           west: getRandomBoolean(),

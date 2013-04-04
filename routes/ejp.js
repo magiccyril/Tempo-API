@@ -9,18 +9,18 @@ var path          = require('path')
  * POST ejp creation.
  */
 exports.create = function(req, res) {
-  var year      = req.params.year  ? req.params.year  : req.body.year;
-  var month     = req.params.month ? req.params.month : req.body.month;
-  var day       = req.params.day   ? req.params.day   : req.body.day;
-  var ejpValues = req.params.ejp   ? req.params.ejp   : req.body.ejp;
+  var year  = req.params.year  ? req.params.year  : req.body.year;
+  var month = req.params.month ? req.params.month : req.body.month;
+  var day   = req.params.day   ? req.params.day   : req.body.day;
+  var zones = req.params.zones ? req.params.zones : req.body.zones;
 
-  var ejpValuesValid = 'object' === typeof ejpValues
-    && 'boolean' === typeof ejpValues.north
-    && 'boolean' === typeof ejpValues.paca
-    && 'boolean' === typeof ejpValues.west
-    && 'boolean' === typeof ejpValues.south;
+  var zonesValid = 'object' === typeof zones
+    && 'boolean' === typeof zones.north
+    && 'boolean' === typeof zones.paca
+    && 'boolean' === typeof zones.west
+    && 'boolean' === typeof zones.south;
 
-  if (!year || !month || !day || !ejpValuesValid) {
+  if (!year || !month || !day || !zonesValid) {
     return res.send(501);
   }
 
@@ -28,7 +28,7 @@ exports.create = function(req, res) {
     'date.year': year,
     'date.month': month,
     'date.day': day,
-    'ejp': ejpValues
+    'zones': zones
   });
 
   ejp.save(function(err) {
@@ -63,7 +63,7 @@ exports.count = RoutesFactory.count(Ejp, function(res, err, data) {
     return res.send(501, { error: err });
   }
 
-  var counters = {
+  var zones = {
     'north': 0,
     'paca': 0,
     'west': 0,
@@ -73,10 +73,10 @@ exports.count = RoutesFactory.count(Ejp, function(res, err, data) {
   for (var i in data) {
     var ejp = data[i];
 
-    if (ejp.ejp) {
-      counters[ejp.ejp]++;
+    if (ejp.zones) {
+      zones[ejp.zones]++;
     }
   }
 
-  res.json(counters);
+  res.json(zones);
 });

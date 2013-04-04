@@ -13,16 +13,16 @@ describe('Ejp Model', function() {
     ejp = new Ejp();
   });
 
-  it('should have false as default ejp value', function() {
-    ejp.ejp.should.exist;
-    ejp.ejp.north.should.exist;
-    ejp.ejp.paca.should.exist;
-    ejp.ejp.west.should.exist;
-    ejp.ejp.south.should.exist;
+  it('should have false as default zones value', function() {
+    ejp.zones.should.exist;
+    ejp.zones.north.should.exist;
+    ejp.zones.paca.should.exist;
+    ejp.zones.west.should.exist;
+    ejp.zones.south.should.exist;
 
-    ejp.ejp.north.should.be.a('boolean').and.equal(false);
-    ejp.ejp.paca.should.be.a('boolean').and.equal(false);
-    ejp.ejp.west.should.be.a('boolean').and.equal(false);
-    ejp.ejp.south.should.be.a('boolean').and.equal(false);
+    ejp.zones.north.should.be.a('boolean').and.equal(false);
+    ejp.zones.paca.should.be.a('boolean').and.equal(false);
+    ejp.zones.west.should.be.a('boolean').and.equal(false);
+    ejp.zones.south.should.be.a('boolean').and.equal(false);
   });
 });
