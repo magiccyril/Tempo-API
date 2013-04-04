@@ -373,6 +373,24 @@ describe('Tempo API', function() {
         });
     });
 
+    it('should respond a JSON with the count of ejp days between one date and now', function(done) {
+      var now       = new Date();
+      var dateString = now.getFullYear() + '-1-1';
+
+      request(app)
+        .get('/tempo/count/' + dateString)
+        .end(function(err, res){
+          res.should.have.status(200);
+          res.should.be.json;
+
+          should.exist(res.body.blue);
+          should.exist(res.body.white);
+          should.exist(res.body.red);
+
+          done();
+        });
+    });
+
   });
 
 });

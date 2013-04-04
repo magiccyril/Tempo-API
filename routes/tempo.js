@@ -100,11 +100,11 @@ exports.listDates = function(req, res) {
  * GET count by color between two dates.
  */
 exports.count = function(req, res) {
-  var from = req.query.from;
-  var to = req.query.to;
+  var from = req.query.from ? req.query.from : utils.yearMonthDayToString(req.params.year, req.params.month, req.params.day);
+  var to   = req.query.to;
 
   if (!from) {
-    return res.send(501, { error: new Error('Invalid arguments') });
+    return res.send(501, { error: 'Invalid arguments' });
   }
 
   if (!to) {
