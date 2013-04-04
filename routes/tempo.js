@@ -1,25 +1,8 @@
-var path = require('path')
-  , config = require('../config')
+var path     = require('path')
+  , config   = require('../config')
   , mongoose = require('mongoose')
-  , Tempo = require('../model').Tempo;
-
-/**
- * Helper function
- */
-function getStringDate(year, month, day) {
-  var date = '';
-  if (year) {
-    date += year;
-  }
-  if (month) {
-    date += '-' + month;
-  }
-  if (day) {
-    date += '-' + day;
-  }
-
-  return date;
-}
+  , Tempo    = require('../model').Tempo
+  , utils    = require('../lib/utils');
 
 /*
  * POST tempo creation.
@@ -62,7 +45,7 @@ exports.del = function(req, res) {
     return res.send(501);
   }
 
-  var date = getStringDate(year, month, day);
+  var date = utils.yearMonthDayToString(year, month, day);
 
   Tempo.findOneByDate(date, function(err, tempo) {
     if (err) {
@@ -102,7 +85,7 @@ exports.listAll = function(req, res) {
  * GET list specific dates tempo.
  */
 exports.listDates = function(req, res) {
-  var date  = getStringDate(req.params.year, req.params.month, req.params.day);
+  var date = utils.yearMonthDayToString(req.params.year, req.params.month, req.params.day);
 
   Tempo.findByDate(date, function(err, data) {
     if (err) {
