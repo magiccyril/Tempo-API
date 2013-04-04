@@ -4,12 +4,13 @@
  */
 
 var express = require('express')
-  , params = require('express-params')
-  , routes = require('./routes')
-  , tempo = require('./routes/tempo')
-  , http = require('http')
-  , path = require('path')
-  , config = require('./config');
+  , params  = require('express-params')
+  , routes  = require('./routes')
+  , tempo   = require('./routes/tempo')
+  , ejp     = require('./routes/ejp')
+  , http    = require('http')
+  , path    = require('path')
+  , config  = require('./config');
 
 var app = express();
 params.extend(app);
@@ -56,6 +57,20 @@ app.get('/tempo/:year-:month-:day', tempo.listDates);
 
 app.get('/tempo/count', tempo.count);
 app.get('/tempo/count/:year-:month-:day', tempo.count);
+
+// Ejp
+app.post('/ejp', ejp.create);
+app.post('/ejp/:year-:month-:day', ejp.create);
+
+app.del('/ejp/:year-:month-:day', ejp.del);
+
+app.get('/ejp', ejp.listAll);
+app.get('/ejp/:year', ejp.listDates);
+app.get('/ejp/:year-:month', ejp.listDates);
+app.get('/ejp/:year-:month-:day', ejp.listDates);
+
+app.get('/ejp/count', ejp.count);
+app.get('/ejp/count/:year-:month-:day', ejp.count);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
