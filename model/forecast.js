@@ -52,9 +52,9 @@ schema.pre('save', function (next) {
  */
 schema.method({
   dateFormated: function () {
-    var year  = utils.pad(this.date.year, 4);
-    var month = utils.pad(this.date.month, 2);
-    var day   = utils.pad(this.date.day, 2);
+    var year  = utils.rightPad(this.date.year, 4, '0');
+    var month = utils.rightPad(this.date.month, 2, '0');
+    var day   = utils.rightPad(this.date.day, 2, '0');
 
     return '' + year + '-' + month + '-' + day;
   },
