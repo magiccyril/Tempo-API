@@ -3,14 +3,15 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , params  = require('express-params')
-  , routes  = require('./routes')
-  , tempo   = require('./routes/tempo')
-  , ejp     = require('./routes/ejp')
-  , http    = require('http')
-  , path    = require('path')
-  , config  = require('./config');
+var express  = require('express')
+  , params   = require('express-params')
+  , routes   = require('./routes')
+  , tempo    = require('./routes/tempo')
+  , ejp      = require('./routes/ejp')
+  , forecast = require('./routes/forecast')
+  , http     = require('http')
+  , path     = require('path')
+  , config   = require('./config');
 
 var app = express();
 params.extend(app);
@@ -71,6 +72,10 @@ app.get('/ejp/:year-:month-:day', ejp.listDates);
 
 app.get('/ejp/count', ejp.count);
 app.get('/ejp/count/:year-:month-:day', ejp.count);
+
+// Forecast
+app.get('/forecast', forecast.index);
+app.get('/forecast-with-counters', forecast.indexWithCounters);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
