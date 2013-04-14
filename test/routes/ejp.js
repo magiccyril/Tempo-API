@@ -5,20 +5,8 @@ var request  = require('supertest')
   , app      = require('../../app')
   , mongoose = require('mongoose')
   , Ejp      = require('../../model').Ejp
-  , async    = require('async');
-
-/**
- * Utilities
- */
-function getRandomBoolean() {
-  var i = Math.floor(Math.random() * 2);
-  switch (i) {
-    case 0:
-      return false;
-    case 1:
-      return true;
-  }
-}
+  , async    = require('async')
+  , utils    = require('../../lib/utils');
 
 /**
  * Tests
@@ -34,10 +22,10 @@ describe('EJP API', function() {
         month: 1,
         day: 18,
         zones: {
-          north: getRandomBoolean(),
-          paca: getRandomBoolean(),
-          west: getRandomBoolean(),
-          south: getRandomBoolean()
+          north: utils.getRandomBoolean(),
+          paca: utils.getRandomBoolean(),
+          west: utils.getRandomBoolean(),
+          south: utils.getRandomBoolean()
         }
       };
     });
@@ -147,10 +135,10 @@ describe('EJP API', function() {
           day: 18
         },
         zones: {
-          north: getRandomBoolean(),
-          paca: getRandomBoolean(),
-          west: getRandomBoolean(),
-          south: getRandomBoolean()
+          north: utils.getRandomBoolean(),
+          paca: utils.getRandomBoolean(),
+          west: utils.getRandomBoolean(),
+          south: utils.getRandomBoolean()
         }
       };
       testEjp = new Ejp(testData);
@@ -213,10 +201,10 @@ describe('EJP API', function() {
         ejp.date.month = date.getMonth() + 1;
         ejp.date.day   = date.getDate();
         ejp.zones      = {
-          north: getRandomBoolean(),
-          paca: getRandomBoolean(),
-          west: getRandomBoolean(),
-          south: getRandomBoolean()
+          north: utils.getRandomBoolean(),
+          paca: utils.getRandomBoolean(),
+          west: utils.getRandomBoolean(),
+          south: utils.getRandomBoolean()
         };
         ejp.save();
 
@@ -230,10 +218,10 @@ describe('EJP API', function() {
           day: 18
         },
         zones: {
-          north: getRandomBoolean(),
-          paca: getRandomBoolean(),
-          west: getRandomBoolean(),
-          south: getRandomBoolean()
+          north: utils.getRandomBoolean(),
+          paca: utils.getRandomBoolean(),
+          west: utils.getRandomBoolean(),
+          south: utils.getRandomBoolean()
         }
       });
       ejpDayOutOf1985.save();
@@ -351,10 +339,10 @@ describe('EJP API', function() {
         ejp.date.month = date.getMonth() + 1;
         ejp.date.day   = date.getDate();
         ejp.zones      = {
-          north: getRandomBoolean(),
-          paca: getRandomBoolean(),
-          west: getRandomBoolean(),
-          south: getRandomBoolean()
+          north: utils.getRandomBoolean(),
+          paca: utils.getRandomBoolean(),
+          west: utils.getRandomBoolean(),
+          south: utils.getRandomBoolean()
         };
         ejp.save();
 

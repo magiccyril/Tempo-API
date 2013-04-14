@@ -5,22 +5,8 @@ var request  = require('supertest')
   , app      = require('../../app')
   , mongoose = require('mongoose')
   , Tempo    = require('../../model').Tempo
-  , async    = require('async');
-
-/**
- * Utilities
- */
-function getRandomColor() {
-  var i = Math.floor(Math.random() * 3);
-  switch (i) {
-    case 0:
-      return 'blue';
-    case 1:
-      return 'white';
-    case 2:
-      return 'red';
-  }
-}
+  , async    = require('async')
+  , utils    = require('../../lib/utils');
 
 /**
  * Tests
@@ -195,7 +181,7 @@ describe('Tempo API', function() {
         tempo.date.year  = date.getFullYear();
         tempo.date.month = date.getMonth() + 1;
         tempo.date.day   = date.getDate();
-        tempo.color      = getRandomColor();
+        tempo.color      = utils.getRandomColor();
         tempo.save();
 
         date.setDate(date.getDate() + 1);
@@ -207,7 +193,7 @@ describe('Tempo API', function() {
           month: 3,
           day: 18
         },
-        color: getRandomColor()
+        color: utils.getRandomColor()
       });
       tempoDayOutOf1985.save();
 
@@ -323,7 +309,7 @@ describe('Tempo API', function() {
         tempo.date.year  = date.getFullYear();
         tempo.date.month = date.getMonth() + 1;
         tempo.date.day   = date.getDate();
-        tempo.color      = getRandomColor();
+        tempo.color      = utils.getRandomColor();
         tempo.save();
 
         date.setDate(date.getDate() + 1);
