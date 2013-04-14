@@ -63,20 +63,11 @@ exports.count = RoutesFactory.count(Ejp, function(res, err, data) {
     return res.send(501, { error: err });
   }
 
-  var zones = {
-    'north': 0,
-    'paca': 0,
-    'west': 0,
-    'south': 0
-  };
-
-  for (var i in data) {
-    var ejp = data[i];
-
-    if (ejp.zones) {
-      zones[ejp.zones]++;
+  Ejp.count(data, function(err, zones) {
+    if (err) {
+      return res.send(501, { error: err });
     }
-  }
 
-  res.json(zones);
+    res.json(zones);
+  });
 });

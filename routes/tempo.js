@@ -57,19 +57,11 @@ exports.count = RoutesFactory.count(Tempo, function(res, err, data) {
     return res.send(501, { error: err });
   }
 
-  var colors = {
-    'blue': 0,
-    'white': 0,
-    'red': 0
-  };
-
-  for (var i in data) {
-    var tempo = data[i];
-
-    if (tempo.color) {
-      colors[tempo.color]++;
+  Tempo.count(data, function(err, colors) {
+    if (err) {
+      return res.send(501, { error: err });
     }
-  }
 
-  res.json(colors);
+    res.json(colors);
+  });
 });
