@@ -319,8 +319,8 @@ describe('Forecast', function() {
         }
 
         data.should.be.ok.and.not.be.empty;
-        // 140 = from year - 1 september 1 to january 18
-        data.length.should.be.equal(140);
+        // 141 = from year - 1 september 1 to january 18
+        data.length.should.be.equal(141);
 
         done();
       });

@@ -352,8 +352,8 @@ describe('Tempo API', function() {
           should.exist(res.body.red);
 
           var sum = res.body.blue + res.body.white + res.body.red;
-          // 140 = from year - 1 september 1 to january 18
-          sum.should.be.equal(140);
+          // 141 = from year - 1 september 1 to january 18
+          sum.should.be.equal(141);
 
           done();
         });
