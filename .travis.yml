@@ -6,5 +6,7 @@ node_js:
   - "0.6"
 services:
   - mongodb
-before_script: "npm install --dev"
-script: "npm test"
+before_script:
+  - cp config-travis.parameters.json config.parameters.json
+  - npm install --dev
+script: npm test
