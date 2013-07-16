@@ -2,6 +2,10 @@
   "name": "TempoAPI",
   "version": "0.0.1",
   "private": true,
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/magiccyril/Tempo-API"
+  },
   "scripts": {
     "start": "node app",
     "test": "make test"
