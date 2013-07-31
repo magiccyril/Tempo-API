@@ -302,8 +302,6 @@ describe('Tempo API', function() {
 
     beforeEach(function(done) {
       var date = new Date();
-      date.setHours(0);
-      date.setMinutes(0);
       date.setDate(1);
       date.setMonth(9 - 1);
       date.setFullYear(year);
