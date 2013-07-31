@@ -1,5 +1,0 @@
---require should
---require assert
---reporter spec
---recursive
---slow 500

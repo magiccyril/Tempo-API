@@ -1,11 +1,16 @@
-var mongoose = require("mongoose")
-  , config   = require('../../config')
-  , Forecast = require('../../model').Forecast
-  , should   = require('should')
-  , async    = require('async');
 
 /**
- * Utilities
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
+  , should   = require('should')
+  , async    = require('async')
+  , app      = require('../../app')
+  , Forecast = mongoose.model('Forecast');
+
+/**
+ * Forecast unit tests
  */
 
 describe('Forecast', function() {
@@ -193,17 +198,34 @@ describe('Forecast', function() {
       date.setMonth(9 - 1);
       date.setFullYear(year - 1);
 
+      var forecasts = new Array();
       for (var i = 0; i < 365; i++) {
         var forecast = new Forecast();
-        forecast.date.year  = date.getFullYear();
-        forecast.date.month = date.getMonth() + 1;
         forecast.date.day   = date.getDate();
-        forecast.save();
+        forecast.date.month = date.getMonth() + 1;
+        forecast.date.year  = date.getFullYear();
 
+        forecasts.push(forecast);
         date.setDate(date.getDate() + 1);
       }
 
-      done();
+      var saveForecast = function(item, callback) {
+        item.save(function(err) {
+          if (err) {
+            callback(err);
+          }
+
+          callback();
+        });
+      };
+
+      async.each(forecasts, saveForecast, function(err) {
+        if (err) {
+          done(err);
+        }
+
+        done();
+      });
     });
 
     afterEach(function (done) {

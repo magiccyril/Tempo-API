@@ -1,12 +1,15 @@
-var path          = require('path')
-  , config        = require('../config')
-  , mongoose      = require('mongoose')
-  , Ejp           = require('../model').Ejp
-  , RoutesFactory = require('../lib/routesFactory')
-  , utils         = require('../lib/utils');
 
-/*
- * POST ejp creation.
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
+  , Ejp      = mongoose.model('Ejp')
+  , Factory  = require('./factory')
+  , utils    = require('../../lib/utils');
+
+/**
+ * Ejp creation.
  */
 exports.create = function(req, res) {
   var year  = req.params.year  ? req.params.year  : req.body.year;
@@ -40,25 +43,25 @@ exports.create = function(req, res) {
   });
 };
 
-/*
- * DELETE ejp.
+/**
+ * Delte ejp.
  */
-exports.del = RoutesFactory.del(Ejp);
+exports.del = Factory.del(Ejp);
 
-/*
- * GET list all ejp.
+/**
+ * List all ejp.
  */
-exports.listAll = RoutesFactory.listAll(Ejp);
+exports.listAll = Factory.listAll(Ejp);
 
-/*
- * GET list specific dates ejp.
+/**
+ * List specific dates ejp.
  */
-exports.listDates = RoutesFactory.listDates(Ejp);
+exports.listDates = Factory.listDates(Ejp);
 
-/*
- * GET count by ejp values between two dates.
+/**
+ * Count by ejp values between two dates.
  */
-exports.count = RoutesFactory.count(Ejp, function(res, err, data) {
+exports.count = Factory.count(Ejp, function(res, err, data) {
   if (err) {
     return res.send(501, { error: err });
   }

@@ -1,9 +1,13 @@
-var path     = require('path')
-  , mongoose = require('mongoose')
-  , Tempo    = require('../model').Tempo
-  , Ejp      = require('../model').Ejp
-  , utils    = require('../lib/utils')
-  , async    = require('async');
+
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
+  , async    = require('async')
+  , Tempo    = mongoose.model('Tempo')
+  , Ejp      = mongoose.model('Ejp')
+  , utils    = require('../../lib/utils');
 
 /**
  * Create funciton to fetch today and tomorrow dates
@@ -137,8 +141,8 @@ function fetchData(callback, withCounters) {
   });
 }
 
-/*
- * GET index page, with tempo and ejp data for today and tomorrow.
+/**
+ * Index page, with tempo and ejp data for today and tomorrow.
  */
 exports.index = function(req, res) {
   fetchData(function(err, results) {
@@ -151,7 +155,7 @@ exports.index = function(req, res) {
 };
 
 /*
- * GET index page, with tempo and ejp data for today and tomorrow + counters.
+ * Index page, with tempo and ejp data for today and tomorrow + counters.
  */
 exports.indexWithCounters = function(req, res) {
   fetchData(function(err, results) {

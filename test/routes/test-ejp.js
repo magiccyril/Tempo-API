@@ -1,16 +1,21 @@
-var request  = require('supertest')
-  , express  = require('express')
-  , assert   = require('assert')
-  , should   = require('should')
-  , app      = require('../../app')
-  , mongoose = require('mongoose')
-  , Ejp      = require('../../model').Ejp
-  , async    = require('async')
-  , utils    = require('../../lib/utils');
 
 /**
- * Tests
+ * Module dependencies.
  */
+
+var mongoose = require('mongoose')
+  , should   = require('should')
+  , request  = require('supertest')
+  , app      = require('../../app')
+  , async    = require('async')
+  , Ejp      = mongoose.model('Ejp')
+  , utils    = require('../../lib/utils')
+  , agent    = request.agent(app);
+
+/**
+ * Ejp functional tests
+ */
+
 describe('EJP API', function() {
 
   describe('POST /ejp', function() {
@@ -31,12 +36,10 @@ describe('EJP API', function() {
     });
 
     it('should respond 501 if no data provided', function(done) {
-      request(app)
-        .post('/ejp')
-        .end(function(err, res){
-          res.should.have.status(501);
-          done();
-        });
+      agent
+      .post('/ejp')
+      .expect(501)
+      .end(done);
     });
 
     it('should respond 501 if invalid data provided', function(done) {
@@ -45,81 +48,77 @@ describe('EJP API', function() {
         paca: 'oui'
       };
 
-      request(app)
-        .post('/ejp')
-        .send(postData)
-        .end(function(err, res){
-          res.should.have.status(501);
-          done();
-        });
+      agent
+      .post('/ejp')
+      .send(postData)
+      .expect(501)
+      .end(done);
     });
 
     it('should save object to database and respond 200', function(done) {
-      request(app)
-        .post('/ejp')
-        .send(postData)
-        .end(function(err, res) {
+      agent
+      .post('/ejp')
+      .send(postData)
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        Ejp.findOneByDate(postData, function(err, ejp) {
           if (err) {
             return done(err);
           }
 
-          res.should.have.status(200);
+          ejp.should.be.ok;
+          ejp.date.year.should.equal(postData.year);
+          ejp.date.month.should.equal(postData.month);
+          ejp.date.day.should.equal(postData.day);
+          ejp.zones.north.should.equal(postData.zones.north);
+          ejp.zones.paca.should.equal(postData.zones.paca);
+          ejp.zones.west.should.equal(postData.zones.west);
+          ejp.zones.south.should.equal(postData.zones.south);
 
-          Ejp.findOneByDate(postData, function(err, ejp) {
-            if (err) {
-              return done(err);
-            }
+          // remove test data.
+          ejp.remove();
 
-            ejp.should.be.ok;
-            ejp.date.year.should.equal(postData.year);
-            ejp.date.month.should.equal(postData.month);
-            ejp.date.day.should.equal(postData.day);
-            ejp.zones.north.should.equal(postData.zones.north);
-            ejp.zones.paca.should.equal(postData.zones.paca);
-            ejp.zones.west.should.equal(postData.zones.west);
-            ejp.zones.south.should.equal(postData.zones.south);
-
-            // remove test data.
-            ejp.remove();
-
-            done();
-          });
-
+          done();
         });
+
+      });
     });
 
     it('should have an alternative URL /ejp/{year}-{month}-{day} to save an object', function(done) {
-      request(app)
-        .post('/ejp/'+ postData.year +'-'+ postData.month + '-'+ postData.day)
-        .send({zones: postData.zones})
-        .end(function(err, res) {
+      agent
+      .post('/ejp/'+ postData.year +'-'+ postData.month + '-'+ postData.day)
+      .send({zones: postData.zones})
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        Ejp.findOneByDate(postData, function(err, ejp) {
           if (err) {
             return done(err);
           }
 
-          res.should.have.status(200);
+          ejp.should.be.ok;
+          ejp.date.year.should.equal(postData.year);
+          ejp.date.month.should.equal(postData.month);
+          ejp.date.day.should.equal(postData.day);
+          ejp.zones.north.should.equal(postData.zones.north);
+          ejp.zones.paca.should.equal(postData.zones.paca);
+          ejp.zones.west.should.equal(postData.zones.west);
+          ejp.zones.south.should.equal(postData.zones.south);
 
-          Ejp.findOneByDate(postData, function(err, ejp) {
-            if (err) {
-              return done(err);
-            }
+          // remove test data.
+          ejp.remove();
 
-            ejp.should.be.ok;
-            ejp.date.year.should.equal(postData.year);
-            ejp.date.month.should.equal(postData.month);
-            ejp.date.day.should.equal(postData.day);
-            ejp.zones.north.should.equal(postData.zones.north);
-            ejp.zones.paca.should.equal(postData.zones.paca);
-            ejp.zones.west.should.equal(postData.zones.west);
-            ejp.zones.south.should.equal(postData.zones.south);
-
-            // remove test data.
-            ejp.remove();
-
-            done();
-          });
-
+          done();
         });
+
+      });
     });
   });
 
@@ -162,25 +161,24 @@ describe('EJP API', function() {
     });
 
     it('should delete an object', function(done) {
-      request(app)
-        .del('/ejp/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day)
-        .end(function(err, res) {
+      agent
+      .del('/ejp/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day)
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        Ejp.findOneByDate(testData.date, function(err, ejp) {
           if (err) {
             return done(err);
           }
 
-          res.should.have.status(200);
+          should.not.exist(ejp);
 
-          Ejp.findOneByDate(testData.date, function(err, ejp) {
-            if (err) {
-              return done(err);
-            }
-
-            should.not.exist(ejp);
-
-            done();
-          });
+          done();
         });
+      });
     });
   });
 
@@ -243,82 +241,86 @@ describe('EJP API', function() {
 
     describe('GET /ejp', function() {
       it('should respond a JSON with all data', function(done) {
-        request(app)
-          .get('/ejp')
-          .end(function(err, res){
-            res.should.have.status(200);
-            res.should.be.json;
+        agent
+        .get('/ejp')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res){
+          res.should.be.json;
 
-            res.body.length.should.equal(366);
+          res.body.length.should.equal(366);
 
-            done();
-          });
+          done();
+        });
       });
     });
 
     describe('GET /ejp/{year}', function() {
       it('should respond a JSON with specific year data', function(done) {
-        request(app)
-          .get('/ejp/1985')
-          .end(function(err, res){
-            res.should.have.status(200);
-            res.should.be.json;
-            res.body.should.be.ok.and.not.be.empty;
+        agent
+        .get('/ejp/1985')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res){
+          res.should.be.json;
+          res.body.should.be.ok.and.not.be.empty;
 
-            for (var i in res.body) {
-              var ejp = res.body[i];
-              if (ejp && 'object' === typeof ejp) {
-                ejp.date.year.should.equal(1985);
-              }
+          for (var i in res.body) {
+            var ejp = res.body[i];
+            if (ejp && 'object' === typeof ejp) {
+              ejp.date.year.should.equal(1985);
             }
+          }
 
-            done();
-          });
+          done();
+        });
       });
     });
 
     describe('GET /ejp/{year}-{month}', function() {
       it('should respond a JSON with specific month data', function(done) {
-        request(app)
-          .get('/ejp/1985-8')
-          .end(function(err, res){
-            res.should.have.status(200);
-            res.should.be.json;
-            res.body.should.be.ok.and.not.be.empty;
+        agent
+        .get('/ejp/1985-8')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res){
+          res.should.be.json;
+          res.body.should.be.ok.and.not.be.empty;
 
-            for (var i in res.body) {
-              var ejp = res.body[i];
-              if (ejp && 'object' === typeof ejp) {
-                ejp.date.year.should.equal(1985);
-                ejp.date.month.should.equal(8);
-              }
+          for (var i in res.body) {
+            var ejp = res.body[i];
+            if (ejp && 'object' === typeof ejp) {
+              ejp.date.year.should.equal(1985);
+              ejp.date.month.should.equal(8);
             }
+          }
 
-            done();
-          });
+          done();
+        });
       });
     });
 
     describe('GET /ejp/{year}-{month}-{day}', function() {
       it('should respond a JSON with specific day data', function(done) {
-        request(app)
-          .get('/ejp/1985-8-8')
-          .end(function(err, res){
-            res.should.have.status(200);
-            res.should.be.json;
-            res.body.should.be.ok.and.not.be.empty;
+        agent
+        .get('/ejp/1985-8-8')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res){
+          res.should.be.json;
+          res.body.should.be.ok.and.not.be.empty;
 
-            for (var i in res.body) {
-              var ejp = res.body[i];
-              if (ejp && 'object' === typeof ejp) {
-                ejp.date.year.should.equal(1985);
-                ejp.date.month.should.equal(8);
-                ejp.date.day.should.equal(8);
-              }
+          for (var i in res.body) {
+            var ejp = res.body[i];
+            if (ejp && 'object' === typeof ejp) {
+              ejp.date.year.should.equal(1985);
+              ejp.date.month.should.equal(8);
+              ejp.date.day.should.equal(8);
             }
+          }
 
-            done();
-          });
+          done();
+        });
       });
     });
 
@@ -375,40 +377,41 @@ describe('EJP API', function() {
     });
 
     it('should respond a JSON with the count of ejp days between two dates', function(done) {
-      request(app)
-        .get('/ejp/count?from=1985-09-01&to=1986-01-18')
-        .end(function(err, res){
-          res.should.have.status(200);
-          res.should.be.json;
+      agent
+      .get('/ejp/count?from=1985-09-01&to=1986-01-18')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+        res.should.be.json;
 
-          should.exist(res.body.north);
-          should.exist(res.body.paca);
-          should.exist(res.body.west);
-          should.exist(res.body.south);
+        should.exist(res.body.north);
+        should.exist(res.body.paca);
+        should.exist(res.body.west);
+        should.exist(res.body.south);
 
-          done();
-        });
+        done();
+      });
     });
 
     it('should respond a JSON with the count of ejp days between one date and now', function(done) {
       var now       = new Date();
       var dateString = now.getFullYear() + '-1-1';
 
-      request(app)
-        .get('/ejp/count/' + dateString)
-        .end(function(err, res){
-          res.should.have.status(200);
-          res.should.be.json;
+      agent
+      .get('/ejp/count/' + dateString)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+        res.should.be.json;
 
-          should.exist(res.body.north);
-          should.exist(res.body.paca);
-          should.exist(res.body.west);
-          should.exist(res.body.south);
+        should.exist(res.body.north);
+        should.exist(res.body.paca);
+        should.exist(res.body.west);
+        should.exist(res.body.south);
 
-          done();
-        });
+        done();
+      });
     });
 
   });
-
 });

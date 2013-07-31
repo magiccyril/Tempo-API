@@ -1,12 +1,15 @@
-var path          = require('path')
-  , config        = require('../config')
-  , mongoose      = require('mongoose')
-  , Tempo         = require('../model').Tempo
-  , RoutesFactory = require('../lib/routesFactory')
-  , utils         = require('../lib/utils');
 
-/*
- * POST tempo creation.
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
+  , Tempo    = mongoose.model('Tempo')
+  , Factory  = require('./factory')
+  , utils    = require('../../lib/utils');
+
+/**
+ * Tempo creation.
  */
 exports.create = function(req, res) {
   var year  = req.params.year  ? req.params.year  : req.body.year;
@@ -34,25 +37,25 @@ exports.create = function(req, res) {
   });
 };
 
-/*
- * DELETE tempo.
+/**
+ * Delete tempo.
  */
-exports.del = RoutesFactory.del(Tempo);
+exports.del = Factory.del(Tempo);
 
-/*
- * GET list all tempo.
+/**
+ * List all tempo.
  */
-exports.listAll = RoutesFactory.listAll(Tempo);
+exports.listAll = Factory.listAll(Tempo);
 
-/*
- * GET list specific dates tempo.
+/**
+ * List specific dates tempo.
  */
-exports.listDates = RoutesFactory.listDates(Tempo);
+exports.listDates = Factory.listDates(Tempo);
 
-/*
- * GET count by color between two dates.
+/**
+ * Count by color between two dates.
  */
-exports.count = RoutesFactory.count(Tempo, function(res, err, data) {
+exports.count = Factory.count(Tempo, function(res, err, data) {
   if (err) {
     return res.send(501, { error: err });
   }

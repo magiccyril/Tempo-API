@@ -1,10 +1,12 @@
-var path     = require('path')
-  , config   = require('../config')
-  , mongoose = require('mongoose')
-  , utils    = require('../lib/utils');
 
 /**
- * DELETE
+ * Module dependencies.
+ */
+
+var utils = require('../../lib/utils');
+
+/**
+ * Delete
  */
 exports.del = function(Model) {
   return function(req, res) {
@@ -39,8 +41,8 @@ exports.del = function(Model) {
   };
 }
 
-/*
- * GET list all objects.
+/**
+ * List all objects.
  */
 exports.listAll = function(Model) {
   return function(req, res) {
@@ -54,8 +56,8 @@ exports.listAll = function(Model) {
   }
 };
 
-/*
- * GET list specific dates objects.
+/**
+ * List specific dates objects.
  */
 exports.listDates = function(Model) {
   return function(req, res) {
@@ -71,8 +73,8 @@ exports.listDates = function(Model) {
   }
 };
 
-/*
- * GET count by objects values between two dates.
+/**
+ * Count by objects values between two dates.
  */
 exports.count = function(Model, callback) {
   return function(req, res) {

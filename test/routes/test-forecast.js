@@ -1,13 +1,17 @@
-var request  = require('supertest')
-  , express  = require('express')
-  , assert   = require('assert')
+
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
   , should   = require('should')
+  , request  = require('supertest')
   , app      = require('../../app')
-  , mongoose = require('mongoose')
-  , Ejp      = require('../../model').Ejp
-  , Tempo    = require('../../model').Tempo
   , async    = require('async')
-  , utils    = require('../../lib/utils');
+  , Ejp      = mongoose.model('Ejp')
+  , Tempo    = mongoose.model('Tempo')
+  , utils    = require('../../lib/utils')
+  , agent    = request.agent(app);
 
 /*
  * Utilies
@@ -59,8 +63,9 @@ function createTempoFactory(date) {
 }
 
 /**
- * Tests
+ * Forecast functional tests
  */
+
 describe('Forecast API', function() {
   var dates         = null;
   var ejpToday      = null;
@@ -109,60 +114,62 @@ describe('Forecast API', function() {
 
   describe('GET /forecast', function() {
     it('should respond a JSON with today and tomorrow data', function(done) {
-      request(app)
-        .get('/forecast')
-        .end(function(err, res){
-          res.should.have.status(200);
-          res.should.be.json;
+      agent
+      .get('/forecast')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+        res.should.be.json;
 
-          should.exist(res.body.today);
-          should.exist(res.body.today.tempo);
-          should.exist(res.body.today.ejp);
+        should.exist(res.body.today);
+        should.exist(res.body.today.tempo);
+        should.exist(res.body.today.ejp);
 
-          should.exist(res.body.tomorrow);
-          should.exist(res.body.tomorrow.tempo);
-          should.exist(res.body.tomorrow.ejp);
+        should.exist(res.body.tomorrow);
+        should.exist(res.body.tomorrow.tempo);
+        should.exist(res.body.tomorrow.ejp);
 
-          done();
-        });
+        done();
       });
     });
+  });
 
   describe('GET /forecast-with-counters', function() {
     it('should respond a JSON with today and tomorrow data + counters', function(done) {
-      request(app)
-        .get('/forecast-with-counters')
-        .end(function(err, res){
-          res.should.have.status(200);
-          res.should.be.json;
+      agent
+      .get('/forecast-with-counters')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+        res.should.be.json;
 
-          should.exist(res.body.today);
-          should.exist(res.body.today.tempo);
-          should.exist(res.body.today.ejp);
+        should.exist(res.body.today);
+        should.exist(res.body.today.tempo);
+        should.exist(res.body.today.ejp);
 
-          should.exist(res.body.tomorrow);
-          should.exist(res.body.tomorrow.tempo);
-          should.exist(res.body.tomorrow.ejp);
+        should.exist(res.body.tomorrow);
+        should.exist(res.body.tomorrow.tempo);
+        should.exist(res.body.tomorrow.ejp);
 
-          should.exist(res.body.count);
+        should.exist(res.body.count);
 
-          should.exist(res.body.count.tempo);
-          var countTempo = res.body.count.tempo;
-          should.exist(countTempo.blue);
-          should.exist(countTempo.white);
-          should.exist(countTempo.red);
-          var countTempoTotal = countTempo.blue + countTempo.white + countTempo.red;
-          countTempoTotal.should.equal(1);
+        should.exist(res.body.count.tempo);
+        var countTempo = res.body.count.tempo;
+        should.exist(countTempo.blue);
+        should.exist(countTempo.white);
+        should.exist(countTempo.red);
+        var countTempoTotal = countTempo.blue + countTempo.white + countTempo.red;
+        countTempoTotal.should.equal(1);
 
-          should.exist(res.body.count.ejp);
-          var countEjp = res.body.count.ejp;
-          should.exist(countEjp.north);
-          should.exist(countEjp.paca);
-          should.exist(countEjp.west);
-          should.exist(countEjp.south);
+        should.exist(res.body.count.ejp);
+        var countEjp = res.body.count.ejp;
+        should.exist(countEjp.north);
+        should.exist(countEjp.paca);
+        should.exist(countEjp.west);
+        should.exist(countEjp.south);
 
-          done();
-        });
+        done();
+      });
     });
   });
 

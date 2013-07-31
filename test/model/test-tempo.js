@@ -1,9 +1,18 @@
-var mongoose = require("mongoose")
-  , config   = require('../../config')
-  , Tempo    = require('../../model').Tempo
-  , should   = require('should')
-  , async    = require('async');
 
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
+  , should   = require('should')
+  , env      = process.env.NODE_ENV || 'development'
+  , config   = require('../../config/config')[env]
+  , app      = require('../../app')
+  , Tempo    = mongoose.model('Tempo');
+
+/**
+ * Tempo unit tests
+ */
 
 describe('Tempo Model', function() {
 
@@ -61,8 +70,8 @@ describe('Tempo Model', function() {
       else {
         date.getFullYear().should.equal(now.getFullYear());
       }
-      date.getMonth().should.equal(config.get('tempo:start:month') - 1);
-      date.getDate().should.equal(config.get('tempo:start:day'));
+      date.getMonth().should.equal(config.tempo.start.month - 1);
+      date.getDate().should.equal(config.tempo.start.day);
 
       done();
     });

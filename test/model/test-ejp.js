@@ -1,9 +1,18 @@
-var mongoose = require("mongoose")
-  , config   = require('../../config')
-  , Ejp      = require('../../model').Ejp
-  , should   = require('should')
-  , async    = require('async');
 
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose')
+  , should   = require('should')
+  , env      = process.env.NODE_ENV || 'development'
+  , config   = require('../../config/config')[env]
+  , app      = require('../../app')
+  , Ejp      = mongoose.model('Ejp');
+
+/**
+ * Ejp unit tests
+ */
 
 describe('Ejp Model', function() {
 
@@ -58,8 +67,8 @@ describe('Ejp Model', function() {
       else {
         date.getFullYear().should.equal(now.getFullYear());
       }
-      date.getMonth().should.equal(config.get('ejp:start:month') - 1);
-      date.getDate().should.equal(config.get('ejp:start:day'));
+      date.getMonth().should.equal(config.ejp.start.month - 1);
+      date.getDate().should.equal(config.ejp.start.day);
 
       done();
     });

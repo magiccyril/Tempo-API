@@ -7,6 +7,6 @@ node_js:
 services:
   - mongodb
 before_script:
-  - cp config-travis.parameters.json config.parameters.json
+  - cp config/config.example.js config/config.js
   - npm install --dev
 script: npm test

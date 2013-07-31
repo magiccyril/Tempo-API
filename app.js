@@ -3,82 +3,42 @@
  * Module dependencies.
  */
 
-var express  = require('express')
-  , params   = require('express-params')
-  , routes   = require('./routes')
-  , tempo    = require('./routes/tempo')
-  , ejp      = require('./routes/ejp')
-  , forecast = require('./routes/forecast')
-  , http     = require('http')
-  , path     = require('path')
-  , config   = require('./config');
+var express = require('express')
+  , fs = require('fs');
+
+/**
+ * Main application entry file.
+ * Please note that the order of loading is important.
+ */
+
+// Load configurations
+// if test env, load example file
+var env = process.env.NODE_ENV || 'development'
+  , config = require('./config/config')[env]
+  , mongoose = require('mongoose');
+
+// Bootstrap db connection
+mongoose.connect(config.db);
+
+// Bootstrap models
+var models_path = __dirname + '/app/models';
+fs.readdirSync(models_path).forEach(function (file) {
+  if (~file.indexOf('.js')) {
+    require(models_path + '/' + file);
+  }
+});
 
 var app = express();
-params.extend(app);
+// express settings
+require('./config/express')(app, config);
 
-// connect to Mongo when the app initializes
-if (0 === mongoose.connection.readyState) {
-  mongoose.connect(config.getConnectionString());
-}
+// Bootstrap routes
+require('./config/routes')(app);
 
-app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
-});
+// Start the app by listening on <port>
+var port = process.env.PORT || 3000;
+app.listen(port);
+console.log('Tempo API started on port '+port);
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
-
-// Parameters
-app.param('year', Number);
-app.param('month', Number);
-app.param('day', Number);
-
-// Front
-app.get('/', routes.index);
-
-// Tempo
-app.post('/tempo', tempo.create);
-app.post('/tempo/:year-:month-:day', tempo.create);
-
-app.del('/tempo/:year-:month-:day', tempo.del);
-
-app.get('/tempo', tempo.listAll);
-app.get('/tempo/:year', tempo.listDates);
-app.get('/tempo/:year-:month', tempo.listDates);
-app.get('/tempo/:year-:month-:day', tempo.listDates);
-
-app.get('/tempo/count', tempo.count);
-app.get('/tempo/count/:year-:month-:day', tempo.count);
-
-// Ejp
-app.post('/ejp', ejp.create);
-app.post('/ejp/:year-:month-:day', ejp.create);
-
-app.del('/ejp/:year-:month-:day', ejp.del);
-
-app.get('/ejp', ejp.listAll);
-app.get('/ejp/:year', ejp.listDates);
-app.get('/ejp/:year-:month', ejp.listDates);
-app.get('/ejp/:year-:month-:day', ejp.listDates);
-
-app.get('/ejp/count', ejp.count);
-app.get('/ejp/count/:year-:month-:day', ejp.count);
-
-// Forecast
-app.get('/forecast', forecast.index);
-app.get('/forecast-with-counters', forecast.indexWithCounters);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
-
-module.exports = app;
+// expose app
+exports = module.exports = app;
