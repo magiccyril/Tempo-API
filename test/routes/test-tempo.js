@@ -302,6 +302,8 @@ describe('Tempo API', function() {
 
     beforeEach(function(done) {
       var date = new Date();
+      date.setHours(0);
+      date.setMinutes(0);
       date.setDate(1);
       date.setMonth(9 - 1);
       date.setFullYear(year);
@@ -363,7 +365,7 @@ describe('Tempo API', function() {
     });
 
     it('should respond a JSON with the count of ejp days between one date and now', function(done) {
-      var now       = new Date();
+      var now        = new Date();
       var dateString = now.getFullYear() + '-1-1';
 
       agent
