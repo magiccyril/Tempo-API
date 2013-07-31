@@ -96,14 +96,14 @@ schema.static('findByDate', function (date, callback) {
   date = Forecast.parseDate(date);
 
   var query = this.find();
-  if (date.year) {
-    query.where('date.year', date.year);
+  if (date.day) {
+    query.where('date.day', date.day);
   }
   if (date.month) {
     query.where('date.month', date.month);
   }
-  if (date.day) {
-    query.where('date.day', date.day);
+  if (date.year) {
+    query.where('date.year', date.year);
   }
 
   return query.exec(callback);
@@ -142,13 +142,16 @@ schema.static('parseDate', function (data) {
   if ('number' === typeof data) {
     dateArray.push(data);
   }
-  else if ('string' === typeof data) {
+
+  if ('string' === typeof data) {
     dateArray = data.split('-');
   }
-  else if (data instanceof Date) {
+
+  if (data instanceof Date) {
     dateArray = utils.jsDateToArray(data);
   }
-  else {
+
+  if (0 === dateArray.length) {
     throw Error('invalid arguments');
   }
 
