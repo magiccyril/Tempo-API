@@ -43,7 +43,9 @@ describe('Tempo Model', function() {
         dates.today.getDate().should.equal(now.getDate());
       }
 
-      dates.tomorrow.getDate().should.equal(dates.today.getDate() + 1);
+      var tomorrowDate = new Date(dates.today.getTime());
+      tomorrowDate.setDate(dates.today.getDate() + 1);
+      dates.tomorrow.getDate().should.equal(tomorrowDate.getDate());
 
       done();
     });

@@ -40,12 +40,11 @@ describe('Forecast', function() {
 
     it('should convert Javascript Date to an object representing the date', function() {
       var input = new Date();
-      input.setFullYear(2012);
-      input.setMonth(9 - 1);
       input.setDate(9);
+      input.setMonth(9 - 1);
+      input.setFullYear(2012);
 
       var date = Forecast.parseDate(input);
-
       date.should.be.a('object');
       date.year.should.equal(2012);
       date.month.should.equal(9);
@@ -100,9 +99,9 @@ describe('Forecast', function() {
 
     it('should allow to set Javascript Date() object as date and allow chaining', function() {
       var date = new Date();
-      date.setFullYear(2012);
-      date.setMonth(9 - 1);
       date.setDate(9);
+      date.setMonth(9 - 1);
+      date.setFullYear(2012);
       forecast.setDate(date).should.be.a('object');
 
       forecast.date.year.should.equal(2012);
@@ -190,9 +189,9 @@ describe('Forecast', function() {
 
     beforeEach(function (done) {
       var date = new Date();
-      date.setFullYear(year - 1);
-      date.setMonth(9 - 1);
       date.setDate(1);
+      date.setMonth(9 - 1);
+      date.setFullYear(year - 1);
 
       for (var i = 0; i < 365; i++) {
         var forecast = new Forecast();
@@ -290,8 +289,6 @@ describe('Forecast', function() {
         }
 
         data.should.be.ok.and.not.be.empty;
-        // 243 = from january 1 to august 31
-        data.length.should.be.equal(243);
         data.forEach(function(forecast) {
           forecast.date.year.should.equal(testDate.year);
         });

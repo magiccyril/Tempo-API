@@ -329,9 +329,9 @@ describe('EJP API', function() {
 
     beforeEach(function(done) {
       var date = new Date();
-      date.setFullYear(year);
-      date.setMonth(9 - 1);
       date.setDate(1);
+      date.setMonth(9 - 1);
+      date.setFullYear(year);
 
       for (var i = 0; i < 365; i++) {
         var ejp = new Ejp();
