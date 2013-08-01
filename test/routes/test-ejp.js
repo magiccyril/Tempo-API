@@ -35,14 +35,15 @@ describe('EJP API', function() {
       };
     });
 
-    it('should respond 501 if no data provided', function(done) {
+    it('should respond 500 if no data provided', function(done) {
       agent
       .post('/ejp')
-      .expect(501)
+      .expect(500)
+      .expect('Content-Type', /json/)
       .end(done);
     });
 
-    it('should respond 501 if invalid data provided', function(done) {
+    it('should respond 500 if invalid data provided', function(done) {
       postData.zones = {
         north: 'ejp',
         paca: 'oui'
@@ -51,7 +52,8 @@ describe('EJP API', function() {
       agent
       .post('/ejp')
       .send(postData)
-      .expect(501)
+      .expect(500)
+      .expect('Content-Type', /json/)
       .end(done);
     });
 

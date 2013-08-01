@@ -24,7 +24,7 @@ exports.create = function(req, res) {
     && 'boolean' === typeof zones.south;
 
   if (!year || !month || !day || !zonesValid) {
-    return res.send(501);
+    return res.status(500).json({ error : new Error('Missing value')});
   }
 
   var ejp = new Ejp({
@@ -36,7 +36,7 @@ exports.create = function(req, res) {
 
   ejp.save(function(err) {
     if (err) {
-      return res.send(501, { error: err });
+      return res.status(500).json({ error: err });
     }
 
     res.send(200);
@@ -63,12 +63,12 @@ exports.listDates = Factory.listDates(Ejp);
  */
 exports.count = Factory.count(Ejp, function(res, err, data) {
   if (err) {
-    return res.send(501, { error: err });
+    return res.status(500).json({ error: err });
   }
 
   Ejp.count(data, function(err, zones) {
     if (err) {
-      return res.send(501, { error: err });
+      return res.status(500).json({ error: err });
     }
 
     res.json(zones);

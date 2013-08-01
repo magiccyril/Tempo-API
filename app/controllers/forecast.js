@@ -147,7 +147,7 @@ function fetchData(callback, withCounters) {
 exports.index = function(req, res) {
   fetchData(function(err, results) {
     if (err) {
-      return res.send(501);
+      return res.status(500).json({ error: err });;
     }
 
     res.json(results);
@@ -160,7 +160,7 @@ exports.index = function(req, res) {
 exports.indexWithCounters = function(req, res) {
   fetchData(function(err, results) {
     if (err) {
-      return res.send(501);
+      return res.status(500).json({ error: err });;
     }
 
     res.json(results);

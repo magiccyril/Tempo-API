@@ -30,20 +30,22 @@ describe('Tempo API', function() {
       };
     });
 
-    it('should respond 501 if no data provided', function(done) {
+    it('should respond 500 if no data provided', function(done) {
       agent
       .post('/tempo')
-      .expect(501)
+      .expect(500)
+      .expect('Content-Type', /json/)
       .end(done);
     });
 
-    it('should respond 501 if invalid data provided', function(done) {
+    it('should respond 500 if invalid data provided', function(done) {
       postData.color = 'pink';
 
       agent
       .post('/tempo')
       .send(postData)
-      .expect(501)
+      .expect(500)
+      .expect('Content-Type', /json/)
       .end(done);
     });
 
