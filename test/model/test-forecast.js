@@ -208,7 +208,7 @@ describe('Forecast', function() {
         forecasts.push(forecast);
         date.setDate(date.getDate() + 1);
       }
-console.log(forecasts);
+
       var saveForecast = function(item, callback) {
         item.save(function(err) {
           if (err) {
