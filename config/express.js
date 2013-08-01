@@ -4,7 +4,9 @@
  */
 
 var express = require('express')
-  , params = require('express-params');
+  , params  = require('express-params')
+  , utils   = require('../lib/utils')
+  , env     = process.env.NODE_ENV || 'development';
 
 module.exports = function (app, config) {
 
@@ -18,12 +20,36 @@ module.exports = function (app, config) {
     level: 9
   }));
 
+  app.enable('trust proxy');
+
   app.use(express.favicon());
   app.use(express.static(config.root + '/public'));
 
-  // don't use logger for test env
-  if (process.env.NODE_ENV !== 'test') {
-    app.use(express.logger('dev'));
+  // logger
+  express.logger.token('nicedate', function(req, res) {
+    var now = new Date();
+    var year   = now.getFullYear();
+    var month  = utils.rightPad(now.getMonth() + 1, 2, '0');
+    var day    = utils.rightPad(now.getDate(), 2, '0');
+    var hour   = utils.rightPad(now.getHours(), 2, '0');
+    var minute = utils.rightPad(now.getMinutes(), 2, '0');
+    var second = utils.rightPad(now.getSeconds(), 2, '0');
+
+    return '' + year + '/' + month + '/' + day + '-' + hour + ':' + minute + ':' + second;
+  });
+
+  switch (env) {
+    // don't use logger for test env
+    case 'test':
+      break;
+
+    case 'development':
+      app.use(express.logger('dev'));
+      break;
+
+    default:
+      app.use(express.logger(':remote-addr :nicedate - :method :url [:status / :response-time ms] (referrer: :referrer)'));
+      break;
   }
 
   // set views path, template engine and default layout

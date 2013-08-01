@@ -4,7 +4,7 @@
  */
 
 var express = require('express')
-  , fs = require('fs');
+  , fs      = require('fs');
 
 /**
  * Main application entry file.
