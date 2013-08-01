@@ -8,6 +8,8 @@ var mongoose = require('mongoose')
   , request  = require('supertest')
   , app      = require('../../app')
   , async    = require('async')
+  , env      = process.env.NODE_ENV || 'development'
+  , config   = require('../../config/config')[env]
   , Tempo    = mongoose.model('Tempo')
   , utils    = require('../../lib/utils')
   , agent    = request.agent(app);
@@ -30,9 +32,18 @@ describe('Tempo API', function() {
       };
     });
 
-    it('should respond 500 if no data provided', function(done) {
+    it('should respond 401 if no apikey provided', function(done) {
       agent
       .post('/tempo')
+      .send(postData)
+      .expect(401)
+      .expect('Content-Type', /json/)
+      .end(done);
+    });
+
+    it('should respond 500 if no data provided', function(done) {
+      agent
+      .post('/tempo?apikey=' + config.apikey)
       .expect(500)
       .expect('Content-Type', /json/)
       .end(done);
@@ -42,7 +53,7 @@ describe('Tempo API', function() {
       postData.color = 'pink';
 
       agent
-      .post('/tempo')
+      .post('/tempo?apikey=' + config.apikey)
       .send(postData)
       .expect(500)
       .expect('Content-Type', /json/)
@@ -51,7 +62,7 @@ describe('Tempo API', function() {
 
     it('should save object to database and respond 200', function(done) {
       agent
-      .post('/tempo')
+      .post('/tempo?apikey=' + config.apikey)
       .send(postData)
       .expect(200)
       .end(function(err, res) {
@@ -81,7 +92,7 @@ describe('Tempo API', function() {
 
     it('should have an alternative URL /tempo/{year}-{month}-{day} to save an object', function(done) {
       agent
-      .post('/tempo/'+ postData.year +'-'+ postData.month + '-'+ postData.day)
+      .post('/tempo/'+ postData.year +'-'+ postData.month + '-'+ postData.day + '?apikey=' + config.apikey)
       .send({color: postData.color})
       .expect(200)
       .end(function(err, res) {
@@ -145,7 +156,7 @@ describe('Tempo API', function() {
 
     it('should delete an object', function(done) {
       agent
-      .del('/tempo/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day)
+      .del('/tempo/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day + '?apikey=' +config.apikey)
       .expect(200)
       .end(function(err, res) {
         if (err) {

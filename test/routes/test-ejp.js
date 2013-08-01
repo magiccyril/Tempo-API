@@ -8,6 +8,8 @@ var mongoose = require('mongoose')
   , request  = require('supertest')
   , app      = require('../../app')
   , async    = require('async')
+  , env      = process.env.NODE_ENV || 'development'
+  , config   = require('../../config/config')[env]
   , Ejp      = mongoose.model('Ejp')
   , utils    = require('../../lib/utils')
   , agent    = request.agent(app);
@@ -35,9 +37,18 @@ describe('EJP API', function() {
       };
     });
 
-    it('should respond 500 if no data provided', function(done) {
+    it('should respond 401 if no apikey provided', function(done) {
       agent
       .post('/ejp')
+      .send(postData)
+      .expect(401)
+      .expect('Content-Type', /json/)
+      .end(done);
+    });
+
+    it('should respond 500 if no data provided', function(done) {
+      agent
+      .post('/ejp?apikey=' + config.apikey)
       .expect(500)
       .expect('Content-Type', /json/)
       .end(done);
@@ -50,7 +61,7 @@ describe('EJP API', function() {
       };
 
       agent
-      .post('/ejp')
+      .post('/ejp?apikey=' + config.apikey)
       .send(postData)
       .expect(500)
       .expect('Content-Type', /json/)
@@ -59,7 +70,7 @@ describe('EJP API', function() {
 
     it('should save object to database and respond 200', function(done) {
       agent
-      .post('/ejp')
+      .post('/ejp?apikey=' + config.apikey)
       .send(postData)
       .expect(200)
       .end(function(err, res) {
@@ -92,7 +103,7 @@ describe('EJP API', function() {
 
     it('should have an alternative URL /ejp/{year}-{month}-{day} to save an object', function(done) {
       agent
-      .post('/ejp/'+ postData.year +'-'+ postData.month + '-'+ postData.day)
+      .post('/ejp/'+ postData.year +'-'+ postData.month + '-'+ postData.day + '?apikey=' + config.apikey)
       .send({zones: postData.zones})
       .expect(200)
       .end(function(err, res) {
@@ -164,7 +175,7 @@ describe('EJP API', function() {
 
     it('should delete an object', function(done) {
       agent
-      .del('/ejp/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day)
+      .del('/ejp/'+ testData.date.year +'-'+ testData.date.month + '-'+ testData.date.day + '?apikey=' + config.apikey)
       .expect(200)
       .end(function(err, res) {
         if (err) {

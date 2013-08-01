@@ -2,7 +2,8 @@
 var path     = require('path')
   , rootPath = path.normalize(__dirname + '/..')
   , tempo    = { start: { month: 9, day: 1 } }
-  , ejp      = { start: { month: 9, day: 1 } };
+  , ejp      = { start: { month: 9, day: 1 } }
+  , apikey   = 'APIKEY';
 
 module.exports = {
   development: {
@@ -12,7 +13,8 @@ module.exports = {
       name: 'Tempo API'
     },
     tempo: tempo,
-    ejp: ejp
+    ejp: ejp,
+    apikey: apiKey
   },
   test: {
     db: 'mongodb://localhost:27017/Tempo-API',
@@ -21,7 +23,8 @@ module.exports = {
       name: 'Tempo API'
     },
     tempo: tempo,
-    ejp: ejp
+    ejp: ejp,
+    apikey: apiKey
   },
   production: {}
 }

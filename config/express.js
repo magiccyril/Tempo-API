@@ -30,7 +30,7 @@ module.exports = function (app, config) {
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'ejs');
 
-  // express params.
+  // express params
   params.extend(app);
 
   app.configure(function () {
