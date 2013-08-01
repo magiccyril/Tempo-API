@@ -34,17 +34,17 @@ module.exports = function (app, config) {
   params.extend(app);
 
   app.configure(function () {
-    // bodyParser should be above methodOverride
-    app.use(express.bodyParser());
+    // Json and urlencoded should be above methodOverride
+    app.use(express.json());
+    app.use(express.urlencoded());
     app.use(express.methodOverride());
 
     // routes should be at the last
     app.use(app.router);
 
-    // assume "not found" in the error msgs
-    // is a 404. this is somewhat silly, but
-    // valid, you can do whatever you like, set
-    // properties, use instanceof etc.
+    // assume "not found" in the error msgs is a 404.
+    // this is somewhat silly, but valid, you can do whatever you like,
+    // set properties, use instanceof etc.
     app.use(function(err, req, res, next){
       // treat as 404
       if (err.message
@@ -54,7 +54,6 @@ module.exports = function (app, config) {
       }
 
       // log it
-      // send emails if you want
       console.error(err.stack);
 
       // error page
