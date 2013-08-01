@@ -306,18 +306,35 @@ describe('Tempo API', function() {
       date.setMonth(9 - 1);
       date.setFullYear(year);
 
+      var tempos = new Array();
       for (var i = 0; i < 365; i++) {
         var tempo = new Tempo();
         tempo.date.year  = date.getFullYear();
         tempo.date.month = date.getMonth() + 1;
         tempo.date.day   = date.getDate();
         tempo.color      = utils.getRandomColor();
-        tempo.save();
 
+        tempos.push(tempo);
         date.setDate(date.getDate() + 1);
       }
 
-      done();
+      var saveTempo = function(item, callback) {
+        item.save(function(err) {
+          if (err) {
+            callback(err);
+          }
+
+          callback();
+        });
+      };
+
+      async.each(tempos, saveTempo, function(err) {
+        if (err) {
+          done(err);
+        }
+
+        done();
+      });
     });
 
     afterEach(function(done) {
