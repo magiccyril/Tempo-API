@@ -62,12 +62,13 @@ module.exports = function (app, config) {
     })
 
     // assume 404 since no middleware responded
-    app.use(function(req, res, next){
-      res.status(404).render('404', {
+    app.use(function(req, res, next) {
+      res.status(404).json({
+        error : 'Not found',
+        code: 404,
         url: req.originalUrl,
-        error: 'Not found'
-      })
-    })
+      });
+    });
   })
 
   // development env config
