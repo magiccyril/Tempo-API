@@ -38,11 +38,6 @@ module.exports = function (app, config) {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
 
-    // adds CSRF support
-    if (process.env.NODE_ENV !== 'test') {
-      app.use(express.csrf());
-    }
-
     // routes should be at the last
     app.use(app.router);
 
