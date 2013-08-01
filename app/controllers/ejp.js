@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose')
   , Ejp      = mongoose.model('Ejp')
-  , Factory  = require('./factory')
+  , Factory  = require('./_factory')
   , utils    = require('../../lib/utils');
 
 /**

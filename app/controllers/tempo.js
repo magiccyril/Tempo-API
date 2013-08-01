@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose')
   , Tempo    = mongoose.model('Tempo')
-  , Factory  = require('./factory')
+  , Factory  = require('./_factory')
   , utils    = require('../../lib/utils');
 
 /**
