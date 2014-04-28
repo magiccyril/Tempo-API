@@ -11,17 +11,17 @@
     "test": "make test"
   },
   "devDependencies": {
-    "mocha": "latest",
-    "should": "latest",
-    "supertest": "latest"
+    "mocha": "1.12.0",
+    "should": "1.2.2",
+    "supertest": "v"
   },
   "dependencies": {
-    "async": "latest",
-    "express": "latest",
-    "express-params": "latest",
-    "ejs": "latest",
-    "forever": "latest",
-    "mongoose": "latest",
-    "mongoose-schema-extend": "latest"
+    "async": "0.2.9",
+    "ejs": "0.8.4",
+    "express": "3.3.4",
+    "express-params": "0.0.3",
+    "forever": "0.10.8",
+    "mongoose": "3.6.15",
+    "mongoose-schema-extend": "0.1.4"
   }
 }
