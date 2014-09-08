@@ -65,6 +65,15 @@ module.exports = function (app, config) {
     app.use(express.urlencoded());
     app.use(express.methodOverride());
 
+    // allow CORS
+    app.use(function(req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+      next();
+    });
+
     // routes should be at the last
     app.use(app.router);
 
@@ -84,7 +93,7 @@ module.exports = function (app, config) {
 
       // error page
       res.status(500).json({ error: err.stack });
-    })
+    });
 
     // assume 404 since no middleware responded
     app.use(function(req, res, next) {
@@ -94,11 +103,11 @@ module.exports = function (app, config) {
         url: req.originalUrl,
       });
     });
-  })
+  });
 
   // development env config
   app.configure('development', function () {
     app.use(express.errorHandler());
     app.locals.pretty = true;
-  })
+  });
 }
