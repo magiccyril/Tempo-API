@@ -18,7 +18,7 @@ exports.create = function(req, res) {
   var color = req.params.color ? req.params.color : req.body.color;
 
   if (!year || !month || !day || !color) {
-    return res.status(500).json({ error : new Error('Missing value')});
+    return res.status(500).jsonp({ error : new Error('Missing value')});
   }
 
   var tempo = new Tempo({
@@ -30,7 +30,7 @@ exports.create = function(req, res) {
 
   tempo.save(function(err) {
     if (err) {
-      return res.status(500).json({ error: err });
+      return res.status(500).jsonp({ error: err });
     }
 
     res.send(200);
@@ -57,14 +57,14 @@ exports.listDates = Factory.listDates(Tempo);
  */
 exports.count = Factory.count(Tempo, function(res, err, data) {
   if (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).jsonp({ error: err });
   }
 
   Tempo.count(data, function(err, colors) {
     if (err) {
-      return res.status(500).json({ error: err });
+      return res.status(500).jsonp({ error: err });
     }
 
-    res.json(colors);
+    res.jsonp(colors);
   });
 });

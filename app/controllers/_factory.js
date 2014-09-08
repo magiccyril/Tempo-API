@@ -51,7 +51,7 @@ exports.listAll = function(Model) {
         return res.send(501, { error: err });
       }
 
-      res.json(data);
+      res.jsonp(data);
     });
   }
 };
@@ -68,7 +68,7 @@ exports.listDates = function(Model) {
         return res.send(501, { error: err });
       }
 
-      res.json(data);
+      res.jsonp(data);
     });
   }
 };

@@ -147,10 +147,10 @@ function fetchData(callback, withCounters) {
 exports.index = function(req, res) {
   fetchData(function(err, results) {
     if (err) {
-      return res.status(500).json({ error: err });;
+      return res.status(500).jsonp({ error: err });;
     }
 
-    res.json(results);
+    res.jsonp(results);
   });
 };
 
@@ -160,9 +160,9 @@ exports.index = function(req, res) {
 exports.indexWithCounters = function(req, res) {
   fetchData(function(err, results) {
     if (err) {
-      return res.status(500).json({ error: err });;
+      return res.status(500).jsonp({ error: err });;
     }
 
-    res.json(results);
+    res.jsonp(results);
   }, 'withCounters');
 };
