@@ -27,19 +27,31 @@ exports.create = function(req, res) {
     return res.status(500).jsonp({ error : new Error('Missing value')});
   }
 
-  var ejp = new Ejp({
-    'date.year': year,
-    'date.month': month,
-    'date.day': day,
-    'zones': zones
-  });
+  var date = utils.yearMonthDayToString(year, month, day);
 
-  ejp.save(function(err) {
+  Ejp.findOneByDate(date, function(err, ejp) {
     if (err) {
-      return res.status(500).jsonp({ error: err });
+      return res.send(501, { error: err });
     }
 
-    res.send(200);
+    // If object doesn't exist create it, else update it.
+    if (!ejp) {
+      ejp = new Ejp({
+        'date.year': year,
+        'date.month': month,
+        'date.day': day
+      });
+    }
+
+    ejp.zones = zones;
+
+    ejp.save(function(err) {
+      if (err) {
+        return res.status(500).jsonp({ error: err });
+      }
+
+      res.send(200);
+    });
   });
 };
 

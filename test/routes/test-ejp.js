@@ -133,6 +133,79 @@ describe('EJP API', function() {
 
       });
     });
+
+    it('should update object if an object already exist for the same date', function(done) {
+      agent
+      .post('/ejp?apikey=' + config.apikey)
+      .send(postData)
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        Ejp.findByDate(postData, function(err, data) {
+          if (err) {
+            return done(err);
+          }
+
+          data.should.not.be.empty;
+
+          data[0].should.be.ok;
+          data[0].date.year.should.equal(postData.year);
+          data[0].date.month.should.equal(postData.month);
+          data[0].date.day.should.equal(postData.day);
+          data[0].zones.north.should.equal(postData.zones.north);
+          data[0].zones.paca.should.equal(postData.zones.paca);
+          data[0].zones.west.should.equal(postData.zones.west);
+          data[0].zones.south.should.equal(postData.zones.south);
+
+          // Repost data and change the color.
+          var rePostData = {
+            year: postData.year,
+            month: postData.month,
+            day: postData.day,
+            zones: {
+              north: !postData.zones.north,
+              paca: !postData.zones.paca,
+              west: !postData.zones.west,
+              south: !postData.zones.south
+            }
+          };
+          agent
+          .post('/ejp?apikey=' + config.apikey)
+          .send(rePostData)
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
+
+            Ejp.findByDate(postData, function(err, data2) {
+              if (err) {
+                return done(err);
+              }
+
+              data2.should.have.length(data.length);
+
+              data2[0].should.be.ok;
+              data2[0].date.year.should.equal(postData.year);
+              data2[0].date.month.should.equal(postData.month);
+              data2[0].date.day.should.equal(postData.day);
+              data2[0].zones.north.should.equal(rePostData.zones.north);
+              data2[0].zones.paca.should.equal(rePostData.zones.paca);
+              data2[0].zones.west.should.equal(rePostData.zones.west);
+              data2[0].zones.south.should.equal(rePostData.zones.south);
+
+              // remove test data.
+              data2[0].remove();
+
+              done();
+            });
+          });
+        });
+      });
+    });
   });
 
   describe('DELETE /ejp/{year}-{month}-{day}', function() {

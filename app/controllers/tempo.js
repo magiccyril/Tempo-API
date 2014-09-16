@@ -21,19 +21,31 @@ exports.create = function(req, res) {
     return res.status(500).jsonp({ error : new Error('Missing value')});
   }
 
-  var tempo = new Tempo({
-    'date.year': year,
-    'date.month': month,
-    'date.day': day,
-    'color': color
-  });
+  var date = utils.yearMonthDayToString(year, month, day);
 
-  tempo.save(function(err) {
+  Tempo.findOneByDate(date, function(err, tempo) {
     if (err) {
-      return res.status(500).jsonp({ error: err });
+      return res.send(501, { error: err });
     }
 
-    res.send(200);
+    // If object doesn't exist create it, else update it.
+    if (!tempo) {
+      tempo = new Tempo({
+        'date.year': year,
+        'date.month': month,
+        'date.day': day
+      });
+    }
+
+    tempo.color = color;
+
+    tempo.save(function(err) {
+      if (err) {
+        return res.status(500).jsonp({ error: err });
+      }
+
+      res.send(200);
+    });
   });
 };
 

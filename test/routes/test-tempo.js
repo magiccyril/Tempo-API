@@ -86,7 +86,6 @@ describe('Tempo API', function() {
 
           done();
         });
-
       });
     });
 
@@ -117,6 +116,68 @@ describe('Tempo API', function() {
           done();
         });
 
+      });
+    });
+
+    it('should update object if an object already exist for the same date', function(done) {
+      agent
+      .post('/tempo?apikey=' + config.apikey)
+      .send(postData)
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        Tempo.findByDate(postData, function(err, data) {
+          if (err) {
+            return done(err);
+          }
+
+          data.should.not.be.empty;
+
+          data[0].should.be.ok;
+          data[0].date.year.should.equal(postData.year);
+          data[0].date.month.should.equal(postData.month);
+          data[0].date.day.should.equal(postData.day);
+          data[0].color.should.equal(postData.color);
+
+          // Repost data and change the color.
+          var rePostData = {
+            year: postData.year,
+            month: postData.month,
+            day: postData.day,
+            color: 'red'
+          };
+          agent
+          .post('/tempo?apikey=' + config.apikey)
+          .send(rePostData)
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
+
+            Tempo.findByDate(postData, function(err, data2) {
+              if (err) {
+                return done(err);
+              }
+
+              data2.should.have.length(data.length);
+
+              data2[0].should.be.ok;
+              data2[0].date.year.should.equal(postData.year);
+              data2[0].date.month.should.equal(postData.month);
+              data2[0].date.day.should.equal(postData.day);
+              data2[0].color.should.equal(rePostData.color);
+
+              // remove test data.
+              data2[0].remove();
+
+              done();
+            });
+          });
+        });
       });
     });
   });
@@ -392,7 +453,7 @@ describe('Tempo API', function() {
       });
     });
 
-    it('should respond a JSON with the count of ejp days between one date and now', function(done) {
+    it('should respond a JSON with the count of tempo days between one date and now', function(done) {
       var now        = new Date();
       var dateString = now.getFullYear() + '-1-1';
 
