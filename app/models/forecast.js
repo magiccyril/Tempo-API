@@ -37,6 +37,14 @@ var ForecastSchema = new mongoose.Schema({
   }
 });
 
+ForecastSchema.set('toObject', {
+  transform: function (doc, ret, options) {
+    // remove the _id of every document before returning the result
+    delete ret._id;
+    delete ret.__v;
+  }
+});
+
 /**
  * Pre-save hook
  */
@@ -76,6 +84,22 @@ ForecastSchema.method({
     this.date.day   = date.day;
 
     return this;
+  },
+
+  clone: function() {
+    var copy = this.constructor();
+    for (var attr in this) {
+        if (this.hasOwnProperty(attr)) copy[attr] = this[attr];
+    }
+
+    return copy;
+  },
+
+  render: function() {
+    var output = this.toObject();
+console.log(output);
+
+    return output;
   }
 });
 

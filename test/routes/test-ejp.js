@@ -336,6 +336,18 @@ describe('EJP API', function() {
 
           res.body.length.should.equal(366);
 
+          for (var i = 0; i < res.body.length; i++) {
+            var ejp = res.body[i];
+
+            ejp.date.year.should.be.ok;
+            ejp.date.month.should.be.ok;
+            ejp.date.day.should.be.ok;
+            ejp.zones.should.be.ok;
+
+            ejp.should.not.have.property('_id');
+            ejp.should.not.have.property('__v');
+          }
+
           done();
         });
       });
@@ -351,11 +363,12 @@ describe('EJP API', function() {
           res.should.be.json;
           res.body.should.be.ok.and.not.be.empty;
 
-          for (var i in res.body) {
+          for (var i = 0; i < res.body.length; i++) {
             var ejp = res.body[i];
-            if (ejp && 'object' === typeof ejp) {
-              ejp.date.year.should.equal(1985);
-            }
+            ejp.date.year.should.equal(1985);
+
+            ejp.should.not.have.property('_id');
+            ejp.should.not.have.property('__v');
           }
 
           done();
@@ -373,12 +386,14 @@ describe('EJP API', function() {
           res.should.be.json;
           res.body.should.be.ok.and.not.be.empty;
 
-          for (var i in res.body) {
+          for (var i = 0; i < res.body.length; i++) {
             var ejp = res.body[i];
-            if (ejp && 'object' === typeof ejp) {
-              ejp.date.year.should.equal(1985);
-              ejp.date.month.should.equal(8);
-            }
+
+            ejp.date.year.should.equal(1985);
+            ejp.date.month.should.equal(8);
+
+            ejp.should.not.have.property('_id');
+            ejp.should.not.have.property('__v');
           }
 
           done();
@@ -396,13 +411,15 @@ describe('EJP API', function() {
           res.should.be.json;
           res.body.should.be.ok.and.not.be.empty;
 
-          for (var i in res.body) {
+          for (var i = 0; i < res.body.length; i++) {
             var ejp = res.body[i];
-            if (ejp && 'object' === typeof ejp) {
-              ejp.date.year.should.equal(1985);
-              ejp.date.month.should.equal(8);
-              ejp.date.day.should.equal(8);
-            }
+
+            ejp.date.year.should.equal(1985);
+            ejp.date.month.should.equal(8);
+            ejp.date.day.should.equal(8);
+
+            ejp.should.not.have.property('_id');
+            ejp.should.not.have.property('__v');
           }
 
           done();

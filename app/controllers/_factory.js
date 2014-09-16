@@ -46,9 +46,14 @@ exports.del = function(Model) {
  */
 exports.listAll = function(Model) {
   return function(req, res) {
-    Model.find({}, function(err, data) {
+    Model.find({}, function(err, rawdata) {
       if (err) {
         return res.send(501, { error: err });
+      }
+
+      var data = new Array();
+      for (var i = 0; i < rawdata.length; i++) {
+        data.push(rawdata[i].toObject());
       }
 
       res.jsonp(data);
@@ -63,9 +68,14 @@ exports.listDates = function(Model) {
   return function(req, res) {
     var date = utils.yearMonthDayToString(req.params.year, req.params.month, req.params.day);
 
-    Model.findByDate(date, function(err, data) {
+    Model.findByDate(date, function(err, rawdata) {
       if (err) {
         return res.send(501, { error: err });
+      }
+
+      var data = new Array();
+      for (var i = 0; i < rawdata.length; i++) {
+        data.push(rawdata[i].toObject());
       }
 
       res.jsonp(data);

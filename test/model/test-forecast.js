@@ -344,6 +344,42 @@ describe('Forecast', function() {
         done();
       });
     });
+  });
 
+  describe('Render', function() {
+    var forecast = null;
+
+    beforeEach(function(){
+      forecast = new Forecast();
+    });
+
+    afterEach(function(done) {
+      forecast.remove(function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        done();
+      });
+    });
+
+    it('should be configured to render a clean object without ids', function(done) {
+      forecast.save(function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        var renderedForecast = forecast.toObject();
+
+        renderedForecast.date.year.should.ok;
+        renderedForecast.date.month.should.ok;
+        renderedForecast.date.day.should.ok;
+
+        renderedForecast.should.not.have.property('_id');
+        renderedForecast.should.not.have.property('__v');
+
+        done();
+      });
+    });
   });
 });

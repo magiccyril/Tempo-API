@@ -295,6 +295,18 @@ describe('Tempo API', function() {
           res.should.be.json;
           res.body.length.should.equal(366);
 
+          for (var i = 0; i < res.body.length; i++) {
+            var tempo = res.body[i];
+
+            tempo.date.year.should.be.ok;
+            tempo.date.month.should.be.ok;
+            tempo.date.day.should.be.ok;
+            tempo.color.should.be.ok;
+
+            tempo.should.not.have.property('_id');
+            tempo.should.not.have.property('__v');
+          }
+
           done();
         });
       });
@@ -310,11 +322,12 @@ describe('Tempo API', function() {
           res.should.be.json;
           res.body.should.be.ok.and.not.be.empty;
 
-          for (var i in res.body) {
+          for (var i = 0; i < res.body.length; i++) {
             var tempo = res.body[i];
-            if (tempo && 'object' === typeof tempo) {
-              tempo.date.year.should.equal(1985);
-            }
+            tempo.date.year.should.equal(1985);
+
+            tempo.should.not.have.property('_id');
+            tempo.should.not.have.property('__v');
           }
 
           done();
@@ -332,12 +345,13 @@ describe('Tempo API', function() {
           res.should.be.json;
           res.body.should.be.ok.and.not.be.empty;
 
-          for (var i in res.body) {
+          for (var i = 0; i < res.body.length; i++) {
             var tempo = res.body[i];
-            if (tempo && 'object' === typeof tempo) {
-              tempo.date.year.should.equal(1985);
-              tempo.date.month.should.equal(8);
-            }
+            tempo.date.year.should.equal(1985);
+            tempo.date.month.should.equal(8);
+
+            tempo.should.not.have.property('_id');
+            tempo.should.not.have.property('__v');
           }
 
           done();
@@ -355,13 +369,14 @@ describe('Tempo API', function() {
           res.should.be.json;
           res.body.should.be.ok.and.not.be.empty;
 
-          for (var i in res.body) {
+          for (var i = 0; i < res.body.length; i++) {
             var tempo = res.body[i];
-            if (tempo && 'object' === typeof tempo) {
-              tempo.date.year.should.equal(1985);
-              tempo.date.month.should.equal(8);
-              tempo.date.day.should.equal(8);
-            }
+            tempo.date.year.should.equal(1985);
+            tempo.date.month.should.equal(8);
+            tempo.date.day.should.equal(8);
+
+            tempo.should.not.have.property('_id');
+            tempo.should.not.have.property('__v');
           }
 
           done();
