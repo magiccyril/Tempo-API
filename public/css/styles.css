@@ -1,0 +1,16 @@
+body {
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.action {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.verb {
+  text-align: center;
+}
+.route {
+  font-family: 'Courier New', Courier, monospace;
+}
