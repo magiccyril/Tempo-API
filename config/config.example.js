@@ -13,17 +13,19 @@ module.exports = {
     },
     tempo: tempo,
     ejp: ejp,
-    apikey: apikey
+    apikey: apikey,
+    cron: 'echo hello'
   },
   test: {
     db: 'mongodb://localhost:27017/Tempo-API',
     root: rootPath,
     app: {
-      name: 'Tempo API'
+      name: 'echo hello'
     },
     tempo: tempo,
     ejp: ejp,
-    apikey: apikey
+    apikey: apikey,
+    cron: ''
   },
   production: {}
 }

@@ -12,6 +12,7 @@ var async = require('async')
 var tempo    = require('../app/controllers/tempo')
   , ejp      = require('../app/controllers/ejp')
   , forecast = require('../app/controllers/forecast')
+  , cron     = require('../app/controllers/cron')
   , content  = require('../app/controllers/index')
   , auth     = require('./middlewares/authorization');
 
@@ -65,4 +66,7 @@ module.exports = function (app) {
   // Forecast
   app.get('/forecast', forecast.index);
   app.get('/forecast-with-counters', forecast.indexWithCounters);
+
+  // Cron
+  app.get('/cron', cron.cron);
 }
