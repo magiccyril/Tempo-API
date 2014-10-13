@@ -12,7 +12,6 @@ var env     = process.env.NODE_ENV || 'development'
  * Run cron command defined in configuration.
  */
 exports.cron = function(req, res) {
-  console.log(config.cron);
   exec(config.cron, function (error, stdout, stderr) {
     if (error) {
       return res.status(500).jsonp({ error: error });
