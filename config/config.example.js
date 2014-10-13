@@ -25,7 +25,7 @@ module.exports = {
     tempo: tempo,
     ejp: ejp,
     apikey: apikey,
-    cron: ''
+    cron: 'echo hello'
   },
   production: {}
 }
