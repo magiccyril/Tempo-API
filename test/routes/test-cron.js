@@ -17,7 +17,6 @@ var should   = require('should')
  */
 
 describe('Cron', function() {
-
   describe('GET /cron', function() {
     it('should have a URL to exectue a command and respond OK', function(done) {
       agent
@@ -31,7 +30,7 @@ describe('Cron', function() {
         res.should.equal("hello\r\n");
 
         done();
+      });
     });
-
   });
 });
