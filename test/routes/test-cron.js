@@ -22,15 +22,7 @@ describe('Cron', function() {
       agent
       .get('/cron')
       .expect(200)
-      .end(function(err, res) {
-        if (err) {
-          return done(err);
-        }
-
-        res.body.should.equal("hello\r\n");
-
-        done();
-      });
+      .end(done);
     });
   });
 });
