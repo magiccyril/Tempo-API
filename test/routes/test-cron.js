@@ -27,7 +27,7 @@ describe('Cron', function() {
           return done(err);
         }
 
-        res.should.equal("hello\r\n");
+        res.body.should.equal("hello\r\n");
 
         done();
       });
