@@ -34,6 +34,8 @@ module.exports = function (app) {
 
   // Front
   app.get('/', content.index);
+  // Robots.txt
+  app.get('/robots.txt', content.robotstxt);
 
   // Tempo
   app.post('/tempo', secureAccess, tempo.create);
@@ -69,4 +71,5 @@ module.exports = function (app) {
 
   // Cron
   app.get('/cron', cron.cron);
+
 }
