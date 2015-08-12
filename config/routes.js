@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var async = require('async')
+var slashes = require("connect-slashes");
 
 /**
  * Controllers
@@ -33,7 +33,7 @@ module.exports = function (app) {
   app.param('day', Number);
 
   // Front
-  app.get('/', content.index);
+  app.get('/', slashes(), content.index);
   // Robots.txt
   app.get('/robots.txt', content.robotstxt);
 
