@@ -9,7 +9,7 @@ module.exports = {
     db: 'mongodb://localhost:27017/tempo',
     root: rootPath,
     app: {
-      name: 'Tempo API'
+      name: 'Tempo API DEV'
     },
     tempo: tempo,
     ejp: ejp,
